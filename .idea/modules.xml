@@ -2,8 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/MyAndroid.iml" filepath="$PROJECT_DIR$/MyAndroid.iml" />
+      <module fileurl="file://$PROJECT_DIR$/LeeWanAndroid.iml" filepath="$PROJECT_DIR$/LeeWanAndroid.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/compressor/compressor.iml" filepath="$PROJECT_DIR$/compressor/compressor.iml" />
     </modules>
   </component>
 </project>
