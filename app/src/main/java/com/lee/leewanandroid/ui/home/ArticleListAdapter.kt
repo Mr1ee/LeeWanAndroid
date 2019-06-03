@@ -1,4 +1,4 @@
-package com.lee.leewanandroid.ui.main
+package com.lee.leewanandroid.ui.home
 
 import android.os.Build
 import android.text.Html

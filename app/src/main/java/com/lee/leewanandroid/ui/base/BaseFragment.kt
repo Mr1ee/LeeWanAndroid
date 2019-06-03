@@ -13,16 +13,18 @@ abstract class BaseFragment : Fragment() {
 
     private val mDisposables = CompositeDisposable()
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return super.onCreateView(inflater, container, savedInstanceState)
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        val view = inflater.inflate(getLayoutId(), container, false)
         initView(view)
+        return view
     }
 
     abstract fun initView(view: View)
+    abstract fun getLayoutId(): Int
 
     /**
      * 防抖动

@@ -1,170 +1,218 @@
 package com.lee.leewanandroid.ui.main
 
-import android.view.LayoutInflater
-import android.view.View
-import androidx.recyclerview.widget.LinearLayoutManager
+import android.os.Bundle
+import android.view.Menu
+import android.widget.TextView
+import androidx.annotation.Nullable
+import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.appcompat.app.AlertDialog
+import androidx.fragment.app.FragmentTransaction
+import com.lee.leewanandroid.Constants
 import com.lee.leewanandroid.R
-import com.lee.leewanandroid.entities.article.ArticleItemData
-import com.lee.leewanandroid.entities.article.BannerData
 import com.lee.leewanandroid.ui.base.BaseActivity
-import com.lee.leewanandroid.utils.Logger
-import com.lee.leewanandroid.widget.BannerGlideImageLoader
-import com.youth.banner.BannerConfig
-import com.youth.banner.Transformer
+import com.lee.leewanandroid.ui.home.HomeFragment
+import com.lee.leewanandroid.widget.ToastUtils
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.main_head_banner.*
+import kotlinx.android.synthetic.main.layout_toolbar.*
 
-class MainActivity : BaseActivity(), Contract.View {
+class MainActivity : BaseActivity() {
 
     companion object {
         private var TAG = MainActivity::class.java.simpleName
     }
 
-    private lateinit var mPresenter: MainPresenter
-    private lateinit var mAdapter: ArticleListAdapter
+    private var mHomePagerFragment: HomeFragment? = null
+    private var mKnowledgeFragment: HomeFragment? = null
+    private var mNavigationFragment: HomeFragment? = null
+    private var mWxArticleFragment: HomeFragment? = null
+    private var mProjectFragment: HomeFragment? = null
+
+    private var mLastFgIndex = -1
+    private var mCurrentFgIndex = 0
+    private var clickTime: Long = 0
+
+    private var mDialog: AlertDialog? = null
 
     override fun getLayoutId(): Int = R.layout.activity_main
 
     override fun initView() {
-        initRefreshLayout()
-        initRecyclerView()
-
-        mPresenter = MainPresenter(this)
-        mPresenter.refreshLayout(true)
-    }
-
-    private fun initRecyclerView() {
-        rv_home_pager.layoutManager = LinearLayoutManager(this)
-        rv_home_pager.setHasFixedSize(true)
-        mAdapter = ArticleListAdapter(R.layout.item_article_card, ArrayList())
-        val headerBanner = LayoutInflater.from(this@MainActivity)
-            .inflate(R.layout.main_head_banner, rv_home_pager, false)
-        mAdapter.setHeaderView(headerBanner)
-        mAdapter.setOnItemChildClickListener { _, view, position ->
-            clickChildEvent(
-                view,
-                position
-            )
+        initDrawerLayout()
+        showFragment(mCurrentFgIndex)
+        initNavigationView()
+        initBottomNavigationView()
+        main_floating_action_btn.setOnClickListener {
+            jumpToTheTop()
         }
-        rv_home_pager.adapter = mAdapter
     }
 
-    private fun clickChildEvent(view: View?, position: Int) {
-        when (view?.id) {
-            R.id.tv_article_chapterName -> {
+    private fun initBottomNavigationView() {
+        bottom_navigation_view.setOnNavigationItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.tab_main_pager -> showFragment(Constants.TYPE_HOME_PAGER)
+                R.id.tab_knowledge_hierarchy -> showFragment(Constants.TYPE_KNOWLEDGE)
+                R.id.tab_navigation -> showFragment(Constants.TYPE_NAVIGATION)
+                R.id.tab_wx_article -> showFragment(Constants.TYPE_WX_ARTICLE)
+                R.id.tab_project -> showFragment(Constants.TYPE_PROJECT)
+                else -> {
+                }
             }
-            R.id.iv_article_like -> collectClickEvent(position)
-            R.id.tv_article_tag -> {
+            true
+        }
+    }
+
+    private fun initNavigationView() {
+        val mUsTv = nav_view.getHeaderView(0).findViewById<TextView>(R.id.nav_header_login)
+        mUsTv.text = getString(R.string.login)
+    }
+
+    private fun showFragment(index: Int) {
+        mCurrentFgIndex = index
+        val transaction = supportFragmentManager.beginTransaction()
+        hideFragment(transaction)
+        mLastFgIndex = index
+        when (index) {
+            Constants.TYPE_HOME_PAGER -> {
+                toolbar_title.text = getString(R.string.home_pager)
+                if (mHomePagerFragment == null) {
+                    mHomePagerFragment = HomeFragment.newInstance()
+                    mHomePagerFragment?.let {
+                        transaction.add(R.id.fragment_group, it)
+                    }
+                }
+                mHomePagerFragment?.let {
+                    transaction.show(it)
+                }
+            }
+            Constants.TYPE_KNOWLEDGE -> {
+                toolbar_title.text = getString(R.string.knowledge_hierarchy)
+                if (mKnowledgeFragment == null) {
+                    mKnowledgeFragment = HomeFragment.newInstance()
+                    mKnowledgeFragment?.let {
+                        transaction.add(R.id.fragment_group, it)
+                    }
+                }
+                mKnowledgeFragment?.let {
+                    transaction.show(it)
+                }
+            }
+            Constants.TYPE_NAVIGATION -> {
+                toolbar_title.text = getString(R.string.navigation)
+                if (mNavigationFragment == null) {
+                    mNavigationFragment = HomeFragment.newInstance()
+                    mNavigationFragment?.let {
+                        transaction.add(R.id.fragment_group, it)
+                    }
+                }
+                mNavigationFragment?.let {
+                    transaction.show(it)
+                }
+            }
+            Constants.TYPE_WX_ARTICLE -> {
+                toolbar_title.text = getString(R.string.wx_article)
+                if (mWxArticleFragment == null) {
+                    mWxArticleFragment = HomeFragment.newInstance()
+                    mWxArticleFragment?.let {
+                        transaction.add(R.id.fragment_group, it)
+                    }
+                }
+                mWxArticleFragment?.let {
+                    transaction.show(it)
+                }
+            }
+            Constants.TYPE_PROJECT -> {
+                toolbar_title.text = getString(R.string.project)
+                if (mProjectFragment == null) {
+                    mProjectFragment = HomeFragment.newInstance()
+                    mProjectFragment?.let {
+                        transaction.add(R.id.fragment_group, it)
+                    }
+                }
+                mProjectFragment?.let {
+                    transaction.show(it)
+                }
+            }
+
+            else -> {
+            }
+        }
+        transaction.commit()
+    }
+
+    private fun hideFragment(transaction: FragmentTransaction) {
+        when (mLastFgIndex) {
+            Constants.TYPE_HOME_PAGER -> mHomePagerFragment?.let {
+                transaction.hide(it)
+            }
+            Constants.TYPE_KNOWLEDGE -> mKnowledgeFragment?.let {
+                transaction.hide(it)
+            }
+            Constants.TYPE_NAVIGATION -> mNavigationFragment?.let {
+                transaction.hide(it)
+            }
+            Constants.TYPE_WX_ARTICLE -> mWxArticleFragment?.let {
+                transaction.hide(it)
+            }
+            Constants.TYPE_PROJECT -> mProjectFragment?.let {
+                transaction.hide(it)
             }
             else -> {
             }
         }
     }
 
-    private fun collectClickEvent(position: Int) {
-        if (mAdapter.data[position].collect) {
-            mAdapter.data[position].collect = false
-            mAdapter.setData(position, mAdapter.data[position])
-        } else {
-            mAdapter.data[position].collect = true
-            mAdapter.setData(position, mAdapter.data[position])
+    private fun initDrawerLayout() {
+        val toggle = ActionBarDrawerToggle(
+            this,
+            drawer_layout,
+            toolbar,
+            R.string.navigation_drawer_open,
+            R.string.navigation_drawer_close
+        )
+        toggle.syncState()
+        drawer_layout.addDrawerListener(toggle)
+    }
+
+    override fun onCreate(@Nullable savedInstanceState: Bundle?) {
+        if (savedInstanceState != null) {
+            mCurrentFgIndex = savedInstanceState.getInt(Constants.CURRENT_FRAGMENT_KEY)
         }
-
+        super.onCreate(savedInstanceState)
     }
 
-    private fun initRefreshLayout() {
-        smart_refresh_layout.setOnRefreshListener { refreshLayout ->
-            mPresenter.refreshLayout(false)
-            refreshLayout.finishRefresh()
-        }
-        smart_refresh_layout.setOnLoadMoreListener { refreshLayout ->
-            mPresenter.loadMore()
-            refreshLayout.finishLoadMore()
-        }
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putInt(Constants.CURRENT_FRAGMENT_KEY, mCurrentFgIndex)
     }
 
-    fun jumpToTheTop() {
-        rv_home_pager?.smoothScrollToPosition(0)
-    }
-
-    override fun setLoadingStatus(active: Boolean) {
-        if (active) {
-
-        } else {
-
-        }
-    }
-
-    override fun showBanners(banners: List<BannerData>?) {
-        banners?.let {
-            val mBanner = head_banner
-            val bannerImageList = ArrayList<String>()
-            val mBannerTitleList = ArrayList<String>()
-            val mBannerUrlList = ArrayList<String>()
-            val bannerIdList = ArrayList<Int>()
-            for (bannerData in it) {
-                bannerData.title?.let { title1 ->
-                    mBannerTitleList.add(title1)
-                } ?: mBannerTitleList.add("")
-
-                bannerData.imagePath?.let { imagePath1 ->
-                    bannerImageList.add(imagePath1)
-                } ?: bannerImageList.add("")
-
-                bannerData.url?.let { url1 ->
-                    mBannerUrlList.add(url1)
-                } ?: mBannerUrlList.add("")
-
-                bannerIdList.add(bannerData.id)
-            }
-            //设置banner样式
-            mBanner.setBannerStyle(BannerConfig.NUM_INDICATOR_TITLE)
-            //设置图片加载器
-            mBanner.setImageLoader(BannerGlideImageLoader())
-            //设置图片集合
-            mBanner.setImages(bannerImageList)
-            //设置banner动画效果
-            mBanner.setBannerAnimation(Transformer.Accordion)
-            //设置标题集合（当banner样式有显示title时）
-            mBanner.setBannerTitles(mBannerTitleList)
-            //设置自动轮播，默认为true
-            mBanner.isAutoPlay(true)
-            //设置轮播时间
-            mBanner.setDelayTime(2500)
-            //设置指示器位置（当banner模式中有指示器时）
-            mBanner.setIndicatorGravity(BannerConfig.CENTER)
-
-//        mBanner.setOnBannerListener({ i ->
-//           i CommonUtils.startArticleDetailActivity(
-//                _mActivity, bannerIdList.get(i),
-//                mBannerTitleList.get(i), mBannerUrlList.get(i),
-//                false, false,
-//                -1, Constants.TAG_DEFAULT
-//            )
-//        }
-//        )
-            //banner设置方法全部调用完毕时最后调用
-            mBanner.start()
-        }
-    }
-
-    override fun showTopArticle(topArticle: List<ArticleItemData>?) {
-        Logger.d(TAG, topArticle?.toString())
-    }
-
-    override fun showArticles(articles: List<ArticleItemData>?, isRefresh: Boolean) {
-        Logger.d(TAG, articles?.toString())
-        articles?.let {
-            if (isRefresh) {
-                mAdapter.replaceData(it)
-            } else {
-                mAdapter.addData(it)
+    private fun jumpToTheTop() {
+        when (mCurrentFgIndex) {
+            Constants.TYPE_HOME_PAGER -> mHomePagerFragment?.jumpToTheTop()
+            Constants.TYPE_KNOWLEDGE -> mKnowledgeFragment?.jumpToTheTop()
+            Constants.TYPE_WX_ARTICLE -> mWxArticleFragment?.jumpToTheTop()
+            Constants.TYPE_NAVIGATION -> mNavigationFragment?.jumpToTheTop()
+            Constants.TYPE_PROJECT -> mProjectFragment?.jumpToTheTop()
+            else -> {
             }
         }
+    }
+
+    override fun onBackPressed() {
+        val currentTime = System.currentTimeMillis()
+        if (currentTime - clickTime > Constants.DOUBLE_INTERVAL_TIME) {
+            ToastUtils.showToast(getString(R.string.double_click_exit_toast))
+            clickTime = System.currentTimeMillis()
+        } else {
+            finish()
+        }
+
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.main_toolbar_menu, menu)
+        return super.onCreateOptionsMenu(menu)
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        mPresenter.unsubscribe()
     }
 }
