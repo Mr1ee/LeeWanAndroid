@@ -1,9 +1,8 @@
 package com.lee.leewanandroid.ui.main
 
-import com.lee.leewanandroid.data.ApiService
+import com.lee.leewanandroid.data.RemoteRepo
 import com.lee.leewanandroid.entities.article.ArticleItemData
 import com.lee.leewanandroid.net.BaseResponse
-import com.lee.leewanandroid.net.RetrofitServiceManager
 import com.lee.leewanandroid.utils.Logger
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -18,7 +17,7 @@ class MainPresenter(override var view: Contract.View) : Contract.Presenter {
     }
 
     private val mDisposables = CompositeDisposable()
-    private val repo = RetrofitServiceManager.getInstance().create(ApiService::class.java)
+    private val repo = RemoteRepo.instance
 
     private var currentPage: Int = 0
     private var isRefresh = true

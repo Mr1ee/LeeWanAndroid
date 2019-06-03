@@ -1,90 +1,83 @@
 package com.lee.leewanandroid.data
 
-
 import com.lee.leewanandroid.entities.article.*
 import com.lee.leewanandroid.entities.todo.TodoItemData
 import com.lee.leewanandroid.entities.todo.TodoListData
 import com.lee.leewanandroid.net.BaseResponse
+import com.lee.leewanandroid.net.RetrofitServiceManager
 import io.reactivex.Observable
-import retrofit2.http.*
 
-@SuppressWarnings("unused")
-interface ApiService {
+class RemoteRepo : DataSource {
 
     companion object {
-        const val BASE_URL = "https://www.wanandroid.com/"
+        val instance: RemoteRepo by lazy(mode = LazyThreadSafetyMode.SYNCHRONIZED) {
+            RemoteRepo()
+        }
     }
 
+    private val mService = RetrofitServiceManager.getInstance().create(ApiService::class.java)
     /**
      * 广告栏
      * https://www.wanandroid.com/banner/json
      *
      * @return 广告栏数据
      */
-    @get:GET("banner/json")
-    val bannerData: Observable<BaseResponse<List<BannerData>>>
-
+    override val bannerData: Observable<BaseResponse<List<BannerData>>>
+        get() = mService.bannerData
     /**
      * 获取首页置顶文章列表
      * https://www.wanandroid.com/article/top/json
      */
-    @get:GET("article/top/json")
-    val topArticles: Observable<BaseResponse<List<ArticleItemData>>>
-
+    override val topArticles: Observable<BaseResponse<List<ArticleItemData>>>
+        get() = mService.topArticles
     /**
      * 常用网站
      * https://www.wanandroid.com/friend/json
      *
      * @return 常用网站数据
      */
-    @get:GET("friend/json")
-    val usefulSites: Observable<BaseResponse<List<UsefulSiteData>>>
-
+    override val usefulSites: Observable<BaseResponse<List<UsefulSiteData>>>
+        get() = mService.usefulSites
     /**
      * 热搜
      * https://www.wanandroid.com//hotkey/json
      *
      * @return 热门搜索数据
      */
-    @get:GET("hotkey/json")
-    @get:Headers("Cache-Control: public, max-age=36000")
-    val topSearchData: Observable<BaseResponse<List<TopSearchData>>>
-
+    override val topSearchData: Observable<BaseResponse<List<TopSearchData>>>
+        get() = mService.topSearchData
     /**
      * 导航
      * https://www.wanandroid.com/navi/json
      *
      * @return 导航数据
      */
-    @get:GET("navi/json")
-    val navigationListData: Observable<BaseResponse<List<NavigationListData>>>
-
+    override val navigationListData: Observable<BaseResponse<List<NavigationListData>>>
+        get() = mService.navigationListData
     /**
      * 项目分类
      * https://www.wanandroid.com/project/tree/json
      *
      * @return 项目分类数据
      */
-    @get:GET("project/tree/json")
-    val projectTreeData: Observable<BaseResponse<List<ProjectTreeData>>>
-
+    override val projectTreeData: Observable<BaseResponse<List<ProjectTreeData>>>
+        get() = mService.projectTreeData
     /**
      * 获取公众号列表
      * https://wanandroid.com/wxarticle/chapters/json
      *
      * @return 公众号列表数据
      */
-    @get:GET("wxarticle/chapters/json")
-    val wxChapterListData: Observable<BaseResponse<List<WxChapterData>>>
-
+    override val wxChapterListData: Observable<BaseResponse<List<WxChapterData>>>
+        get() = mService.wxChapterListData
     /**
      * 知识体系
      * https://www.wanandroid.com/tree/json
      *
      * @return 知识体系数据
      */
-    @get:GET("tree/json")
-    val knowledgeTreeData: Observable<BaseResponse<List<KnowledgeTreeData>>>
+    override val knowledgeTreeData: Observable<BaseResponse<List<KnowledgeTreeData>>>
+        get() = mService.knowledgeTreeData
 
     /**
      * 获取文章列表
@@ -92,8 +85,9 @@ interface ApiService {
      *
      * @param pageNum
      */
-    @GET("article/list/{pageNum}/json")
-    fun getArticleList(@Path("pageNum") pageNum: Int): Observable<BaseResponse<ArticleListData>>
+    override fun getArticleList(pageNum: Int): Observable<BaseResponse<ArticleListData>> {
+        return mService.getArticleList(pageNum)
+    }
 
     /**
      * 搜索
@@ -103,9 +97,12 @@ interface ApiService {
      * @param k    POST search key
      * @return 搜索数据
      */
-    @POST("article/query/{page}/json")
-    @FormUrlEncoded
-    fun getSearchResultList(@Path("page") page: Int, @Field("k") k: String): Observable<BaseResponse<ArticleListData>>
+    override fun getSearchResultList(
+        page: Int,
+        k: String
+    ): Observable<BaseResponse<ArticleListData>> {
+        return mService.getSearchResultList(page, k)
+    }
 
     /**
      * 登录
@@ -115,9 +112,9 @@ interface ApiService {
      * @param password password
      * @return 登录数据
      */
-    @POST("user/login")
-    @FormUrlEncoded
-    fun login(@Field("username") username: String, @Field("password") password: String): Observable<BaseResponse<LoginData>>
+    override fun login(username: String, password: String): Observable<BaseResponse<LoginData>> {
+        return mService.login(username, password)
+    }
 
     /**
      * 注册
@@ -128,9 +125,13 @@ interface ApiService {
      * @param repassword re password
      * @return 注册数据
      */
-    @POST("user/register")
-    @FormUrlEncoded
-    fun register(@Field("username") username: String, @Field("password") password: String, @Field("repassword") repassword: String): Observable<BaseResponse<LoginData>>
+    override fun register(
+        username: String,
+        password: String,
+        repassword: String
+    ): Observable<BaseResponse<LoginData>> {
+        return mService.register(username, password, repassword)
+    }
 
     /**
      * 退出登录
@@ -138,8 +139,9 @@ interface ApiService {
      *
      * @return 登录数据
      */
-    @GET("user/logout/json")
-    fun logout(): Observable<BaseResponse<LoginData>>
+    override fun logout(): Observable<BaseResponse<LoginData>> {
+        return mService.logout()
+    }
 
     /**
      * 收藏站内文章
@@ -148,8 +150,9 @@ interface ApiService {
      * @param id article id
      * @return 收藏站内文章数据
      */
-    @POST("lg/collect/{id}/json")
-    fun addCollectArticle(@Path("id") id: Int): Observable<BaseResponse<ArticleListData>>
+    override fun addCollectArticle(id: Int): Observable<BaseResponse<ArticleListData>> {
+        return mService.addCollectArticle(id)
+    }
 
     /**
      * 收藏站外文章
@@ -160,14 +163,13 @@ interface ApiService {
      * @param link   link
      * @return 收藏站外文章数据
      */
-    @POST("lg/collect/add/json")
-    @FormUrlEncoded
-    fun addCollectOutsideArticle(
-        @Field("title") title: String, @Field("author") author: String, @Field(
-            "link"
-        ) link: String
-    ): Observable<BaseResponse<ArticleListData>>
-
+    override fun addCollectOutsideArticle(
+        title: String,
+        author: String,
+        link: String
+    ): Observable<BaseResponse<ArticleListData>> {
+        return mService.addCollectOutsideArticle(title, author, link)
+    }
 
     /**
      * 获取收藏列表
@@ -176,8 +178,9 @@ interface ApiService {
      * @param page page number
      * @return 收藏列表数据
      */
-    @GET("lg/collect/list/{page}/json")
-    fun getCollectList(@Path("page") page: Int): Observable<BaseResponse<ArticleListData>>
+    override fun getCollectList(page: Int): Observable<BaseResponse<ArticleListData>> {
+        return mService.getCollectList(page)
+    }
 
     /**
      * 文章列表中取消收藏文章
@@ -186,8 +189,9 @@ interface ApiService {
      * @param id 列表中文章的id
      * @return 取消站内文章数据
      */
-    @POST("lg/uncollect_originId/{id}/json")
-    fun cancelCollectArticle(@Path("id") id: Int): Observable<BaseResponse<ArticleListData>>
+    override fun cancelCollectArticle(id: Int): Observable<BaseResponse<ArticleListData>> {
+        return mService.cancelCollectArticle(id)
+    }
 
     /**
      * 收藏列表中取消收藏文章
@@ -198,9 +202,12 @@ interface ApiService {
      * 但是收藏支持主动添加，这种情况下，没有originId则为-1
      * @return 取消收藏列表中文章数据
      */
-    @POST("lg/uncollect/{id}/json")
-    @FormUrlEncoded
-    fun cancelCollectInCollectPage(@Path("id") id: Int, @Field("originId") originId: Int): Observable<BaseResponse<ArticleListData>>
+    override fun cancelCollectInCollectPage(
+        id: Int,
+        originId: Int
+    ): Observable<BaseResponse<ArticleListData>> {
+        return mService.cancelCollectInCollectPage(id, originId)
+    }
 
     /**
      * 项目列表数据
@@ -210,8 +217,12 @@ interface ApiService {
      * @param cid  child page id
      * @return 项目列表数据
      */
-    @GET("project/list/{page}/json")
-    fun getProjectListData(@Path("page") page: Int, @Query("cid") cid: Int): Observable<BaseResponse<ArticleListData>>
+    override fun getProjectListData(
+        page: Int,
+        cid: Int
+    ): Observable<BaseResponse<ArticleListData>> {
+        return mService.getProjectListData(page, cid)
+    }
 
     /**
      * 获取当前公众号的数据
@@ -221,8 +232,9 @@ interface ApiService {
      * @param page
      * @return 获取当前公众号的数据
      */
-    @GET("wxarticle/list/{id}/{page}/json")
-    fun getWxArticlesData(@Path("id") id: Int, @Path("page") page: Int): Observable<BaseResponse<ArticleListData>>
+    override fun getWxArticlesData(id: Int, page: Int): Observable<BaseResponse<ArticleListData>> {
+        return mService.getWxArticlesData(id, page)
+    }
 
     /**
      * 指定搜索内容，搜索当前公众号的某页的此类数据
@@ -233,8 +245,13 @@ interface ApiService {
      * @param k
      * @return 指定搜索内容，搜索当前公众号的某页的此类数据
      */
-    @GET("wxarticle/list/{id}/{page}/json")
-    fun getWxSearchData(@Path("id") id: Int, @Path("page") page: Int, @Query("k") k: String): Observable<BaseResponse<ArticleListData>>
+    override fun getWxSearchData(
+        id: Int,
+        page: Int,
+        k: String
+    ): Observable<BaseResponse<ArticleListData>> {
+        return mService.getWxSearchData(id, page, k)
+    }
 
     /**
      * 知识体系下的文章
@@ -244,9 +261,12 @@ interface ApiService {
      * @param cid  second page id
      * @return 知识体系文章数据
      */
-    @GET("article/list/{page}/json")
-    fun getKnowledgeListData(@Path("page") page: Int, @Query("cid") cid: Int): Observable<BaseResponse<ArticleListData>>
-
+    override fun getKnowledgeListData(
+        page: Int,
+        cid: Int
+    ): Observable<BaseResponse<ArticleListData>> {
+        return mService.getKnowledgeListData(page, cid)
+    }
 
     /**
      * 获取TODO列表
@@ -261,8 +281,12 @@ interface ApiService {
      *
      * @return
      */
-    @GET("lg/todo/v2/list/{page}/json")
-    fun getTodoListData(@Path("page") page: Int, @QueryMap map: Map<String, Any>): Observable<BaseResponse<TodoListData>>
+    override fun getTodoListData(
+        page: Int,
+        map: Map<String, Any>
+    ): Observable<BaseResponse<TodoListData>> {
+        return mService.getTodoListData(page, map)
+    }
 
     /**
      * 新增一条TODO
@@ -277,9 +301,9 @@ interface ApiService {
      *
      * @return
      */
-    @POST("lg/todo/add/json")
-    @FormUrlEncoded
-    fun addTodo(@FieldMap map: Map<String, Any>): Observable<BaseResponse<TodoItemData>>
+    override fun addTodo(map: Map<String, Any>): Observable<BaseResponse<TodoItemData>> {
+        return mService.addTodo(map)
+    }
 
     /**
      * 更新一条TODO
@@ -296,9 +320,12 @@ interface ApiService {
      *
      * @return
      */
-    @POST("lg/todo/update/{id}/json")
-    @FormUrlEncoded
-    fun updateTodo(@Path("id") id: Int, @FieldMap map: Map<String, Any>): Observable<BaseResponse<TodoItemData>>
+    override fun updateTodo(
+        id: Int,
+        map: Map<String, Any>
+    ): Observable<BaseResponse<TodoItemData>> {
+        return mService.updateTodo(id, map)
+    }
 
     /**
      * 删除一条TODO
@@ -309,8 +336,9 @@ interface ApiService {
      *
      * @return
      */
-    @POST("lg/todo/delete/{id}/json")
-    fun deleteTodo(@Path("id") id: Int): Observable<BaseResponse<TodoItemData>>
+    override fun deleteTodo(id: Int): Observable<BaseResponse<TodoItemData>> {
+        return mService.deleteTodo(id)
+    }
 
     /**
      * 仅更新完成状态TODO
@@ -321,8 +349,7 @@ interface ApiService {
      * status: 0或1，传1代表未完成到已完成，反之则反之。
      * @return
      */
-    @POST("lg/todo/done/{id}/json")
-    @FormUrlEncoded
-    fun updateTodoStatus(@Path("id") id: Int, @Field("status") status: Int): Observable<BaseResponse<TodoItemData>>
-
+    override fun updateTodoStatus(id: Int, status: Int): Observable<BaseResponse<TodoItemData>> {
+        return mService.updateTodoStatus(id, status)
+    }
 }

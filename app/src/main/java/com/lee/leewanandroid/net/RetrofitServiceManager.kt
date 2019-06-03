@@ -14,9 +14,6 @@ import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 import okhttp3.logging.HttpLoggingInterceptor
 
-
-
-
 class RetrofitServiceManager// 创建 OKHttpClient//连接超时时间//写操作 超时时间//读操作超时时间
 
 // 添加公共参数拦截器
