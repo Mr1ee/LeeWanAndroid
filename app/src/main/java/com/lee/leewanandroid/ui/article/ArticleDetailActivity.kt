@@ -79,7 +79,25 @@ class ArticleDetailActivity : BaseActivity(), Contract.View {
 
         mPresenter = ArticlePresenter(this)
 
+        initToolbar()
         initAgentWeb()
+    }
+
+    private fun initToolbar() {
+        setSupportActionBar(toolbar)
+        supportActionBar?.run {
+            setDisplayHomeAsUpEnabled(true)
+            setDisplayShowTitleEnabled(false)
+            @Suppress("DEPRECATION")
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                toolbar_title.text = Html.fromHtml(mArticle.title, Html.FROM_HTML_MODE_LEGACY)
+            } else {
+                toolbar_title.text = Html.fromHtml(mArticle.title)
+            }
+            toolbar_title.isSelected = true
+        }
+
+        toolbar.setNavigationOnClickListener { onBackPressed() }
     }
 
     private fun initAgentWeb() {
