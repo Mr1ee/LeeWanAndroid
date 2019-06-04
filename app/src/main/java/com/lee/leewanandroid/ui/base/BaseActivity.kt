@@ -5,6 +5,7 @@ import android.view.View
 import androidx.annotation.LayoutRes
 import androidx.appcompat.app.AppCompatActivity
 import com.jakewharton.rxbinding2.view.RxView
+import com.lee.leewanandroid.widget.ToastUtils
 import io.reactivex.disposables.CompositeDisposable
 import java.util.concurrent.TimeUnit
 
@@ -32,6 +33,14 @@ abstract class BaseActivity : AppCompatActivity() {
             .subscribe {
                 action.invoke()
             })
+    }
+
+    fun showToast(msg: String?) {
+        ToastUtils.showToast(text = msg)
+    }
+
+    fun showToast(resId: Int) {
+        ToastUtils.showToast(resId = resId)
     }
 
     override fun onStop() {

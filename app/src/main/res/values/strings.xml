@@ -130,6 +130,8 @@
     <string name="delete_todo">删除</string>
     <string name="confirm_delete_todo">确认删除？</string>
 
+    <string name="share_type_url" translatable="false">%1$sShare【%2$s】special top：%3$s</string>
+
     <!-- behavior -->
     <string name="scale_down_show_behavior" translatable="false">com.lee.leewanandroid.widget.ScaleDownShowBehavior</string>
 </resources>

@@ -1,32 +1,24 @@
 package com.lee.leewanandroid.ui.home
 
-import com.lee.leewanandroid.data.RemoteRepo
 import com.lee.leewanandroid.entities.article.ArticleItemData
 import com.lee.leewanandroid.net.BaseResponse
+import com.lee.leewanandroid.ui.base.BasePresenter
 import com.lee.leewanandroid.utils.Logger
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.disposables.Disposable
 import io.reactivex.functions.BiFunction
 import io.reactivex.schedulers.Schedulers
 
-class HomePresenter(override var view: Contract.View) : Contract.Presenter {
+class HomePresenter(override var view: Contract.View) : Contract.Presenter
+    , BasePresenter<Contract.View>() {
     companion object {
         private var TAG = HomePresenter::class.java.simpleName
     }
-
-    private val mDisposables = CompositeDisposable()
-    private val repo = RemoteRepo.instance
 
     private var currentPage: Int = 0
     private var isRefresh = true
 
     override fun subscribe() {
-    }
-
-    override fun unsubscribe() {
-        mDisposables.clear()
     }
 
     override fun loadBannerData(isShowStatusView: Boolean) {
@@ -132,9 +124,5 @@ class HomePresenter(override var view: Contract.View) : Contract.Presenter {
 
     override fun reload() {
         refreshLayout(true)
-    }
-
-    private fun Disposable.gather() {
-        mDisposables.add(this)
     }
 }

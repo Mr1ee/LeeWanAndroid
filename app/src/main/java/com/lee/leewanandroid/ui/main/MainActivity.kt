@@ -40,7 +40,7 @@ class MainActivity : BaseActivity() {
         showFragment(mCurrentFgIndex)
         initNavigationView()
         initBottomNavigationView()
-        main_floating_action_btn.setOnClickListener {
+        main_floating_action_btn.onClickEvent {
             jumpToTheTop()
         }
     }

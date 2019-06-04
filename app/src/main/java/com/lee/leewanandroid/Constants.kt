@@ -34,4 +34,7 @@ object Constants {
     const val KNOWLEDGE_DATA = "knowledge_data"
 
     const val DOUBLE_INTERVAL_TIME: Long = 2000
+
+    const val MENU_BUILDER = "MenuBuilder"
+
 }

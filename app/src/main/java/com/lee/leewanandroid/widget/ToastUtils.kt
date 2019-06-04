@@ -11,7 +11,7 @@ object ToastUtils {
         }
     }
 
-    fun showToast(text: String, duration: Int = Toast.LENGTH_SHORT) {
+    fun showToast(text: String?, duration: Int = Toast.LENGTH_SHORT) {
         instance.setText(text)
         instance.duration = duration
         instance.show()

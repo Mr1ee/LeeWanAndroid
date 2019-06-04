@@ -1,13 +1,12 @@
 package com.lee.leewanandroid.ui.main
 
 import com.lee.leewanandroid.entities.article.ArticleItemData
-import com.lee.leewanandroid.entities.article.ArticleListData
 import com.lee.leewanandroid.entities.article.BannerData
-import com.lee.leewanandroid.ui.base.BasePresenter
-import com.lee.leewanandroid.ui.base.BaseView
+import com.lee.leewanandroid.ui.base.IPresenter
+import com.lee.leewanandroid.ui.base.IView
 
 interface Contract {
-    interface View : BaseView {
+    interface View : IView {
         fun showBanners(banners: List<BannerData>?)
 
         fun showTopArticle(topArticle: List<ArticleItemData>?)
@@ -15,7 +14,7 @@ interface Contract {
         fun showArticles(articles: List<ArticleItemData>?, isRefresh: Boolean)
     }
 
-    interface Presenter : BasePresenter<View> {
+    interface Presenter : IPresenter<View> {
         fun loadBannerData(isShowStatusView: Boolean)
 
         fun loadTopArticle()

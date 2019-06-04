@@ -1,9 +1,19 @@
 package com.lee.leewanandroid.ui.base
 
-interface BasePresenter<T> {
-    var view: T
+import com.lee.leewanandroid.data.RemoteRepo
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.disposables.Disposable
 
-    fun subscribe()
+abstract class BasePresenter<T> : IPresenter<T> {
 
-    fun unsubscribe()
+    private val mDisposables = CompositeDisposable()
+    open var repo = RemoteRepo.instance
+
+    override fun unsubscribe() {
+        mDisposables.clear()
+    }
+
+    fun Disposable.gather() {
+        mDisposables.add(this)
+    }
 }

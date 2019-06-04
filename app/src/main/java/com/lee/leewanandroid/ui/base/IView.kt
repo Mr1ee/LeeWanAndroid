@@ -1,5 +1,5 @@
 package com.lee.leewanandroid.ui.base
 
-interface BaseView {
+interface IView {
     fun setLoadingStatus(active: Boolean)
 }

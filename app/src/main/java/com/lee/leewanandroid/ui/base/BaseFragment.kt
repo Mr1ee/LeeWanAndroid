@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.jakewharton.rxbinding2.view.RxView
+import com.lee.leewanandroid.widget.ToastUtils
 import io.reactivex.disposables.CompositeDisposable
 import java.util.concurrent.TimeUnit
 
@@ -36,6 +37,14 @@ abstract class BaseFragment : Fragment() {
                 .subscribe {
                     action.invoke()
                 })
+    }
+
+    fun showToast(msg: String?) {
+        ToastUtils.showToast(text = msg)
+    }
+
+    fun showToast(resId: Int) {
+        ToastUtils.showToast(resId = resId)
     }
 
     override fun onStop() {

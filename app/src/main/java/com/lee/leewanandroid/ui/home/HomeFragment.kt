@@ -5,6 +5,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.lee.leewanandroid.R
 import com.lee.leewanandroid.entities.article.ArticleItemData
 import com.lee.leewanandroid.entities.article.BannerData
+import com.lee.leewanandroid.ui.article.ArticleDetailActivity
 import com.lee.leewanandroid.ui.base.BaseFragment
 import com.lee.leewanandroid.utils.Logger
 import com.lee.leewanandroid.widget.BannerGlideImageLoader
@@ -71,15 +72,14 @@ class HomeFragment : BaseFragment(), Contract.View {
             //设置指示器位置（当banner模式中有指示器时）
             mBanner.setIndicatorGravity(BannerConfig.CENTER)
 
-//        mBanner.setOnBannerListener({ i ->
-//           i CommonUtils.startArticleDetailActivity(
-//                _mActivity, bannerIdList.get(i),
-//                mBannerTitleList.get(i), mBannerUrlList.get(i),
-//                false, false,
-//                -1, Constants.TAG_DEFAULT
-//            )
-//        }
-//        )
+            mBanner.setOnBannerListener { i ->
+                context?.run {
+                    ArticleDetailActivity.navigation(
+                        this, bannerIdList[i],
+                        mBannerTitleList[i], mBannerUrlList[i]
+                    )
+                }
+            }
             //banner设置方法全部调用完毕时最后调用
             mBanner.start()
         }
@@ -111,22 +111,38 @@ class HomeFragment : BaseFragment(), Contract.View {
     override fun getLayoutId(): Int = R.layout.fragment_main_page
 
     private fun initRecyclerView(view: View) {
-        view.rv_home_pager.layoutManager = LinearLayoutManager(activity)
-        view.rv_home_pager.setHasFixedSize(true)
-        mAdapter = ArticleListAdapter(
-            R.layout.item_article_card,
-            ArrayList()
-        )
-        val headerBanner =
-            layoutInflater.inflate(R.layout.main_head_banner, view.rv_home_pager, false)
-        mAdapter.setHeaderView(headerBanner)
-        mAdapter.setOnItemChildClickListener { _, view1, position ->
-            clickChildEvent(
-                view1,
-                position
-            )
+        view.rv_home_pager.run {
+            layoutManager = LinearLayoutManager(activity)
+            setHasFixedSize(true)
+
+            mAdapter = ArticleListAdapter(
+                R.layout.item_article_card,
+                ArrayList()
+            ).apply {
+                val headerBanner =
+                    layoutInflater.inflate(R.layout.main_head_banner, this@run, false)
+                setHeaderView(headerBanner)
+                setOnItemChildClickListener { _, child, position ->
+                    clickChildEvent(
+                        child,
+                        position
+                    )
+                }
+                setOnItemClickListener { _, _, position ->
+                    startArticleDetailActivity(position)
+                }
+            }
+            adapter = mAdapter
         }
-        view.rv_home_pager.adapter = mAdapter
+
+    }
+
+    private fun startArticleDetailActivity(position: Int) {
+        context?.run {
+            mAdapter.data[position]?.let {
+                ArticleDetailActivity.navigation(this, true, it)
+            }
+        }
     }
 
     private fun clickChildEvent(view: View?, position: Int) {
