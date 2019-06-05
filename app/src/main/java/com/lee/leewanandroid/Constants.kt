@@ -25,6 +25,21 @@ object Constants {
     const val TYPE_SEARCH_RESULT = 8
     const val TYPE_ABOUT_US = 9
 
+    /**
+     * Shared Preference key
+     */
+    const val ACCOUNT = "account"
+
+    const val PASSWORD = "password"
+
+    const val LOGIN_STATUS = "login_status"
+
+    const val AUTO_CACHE_STATE = "auto_cache_state"
+
+    const val NO_IMAGE_STATE = "no_image_state"
+
+    const val NIGHT_MODE = "night_mode"
+
     const val TYPE_FRAGMENT_KEY = "type_fragment"
 
     const val SEARCH_KEY = "search_key"

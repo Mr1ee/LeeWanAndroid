@@ -6,6 +6,8 @@ apply plugin: 'kotlin-android-extensions'
 
 apply plugin: 'kotlin-kapt'
 
+apply plugin: 'org.greenrobot.greendao'
+
 android {
     compileSdkVersion 28
     defaultConfig {
@@ -24,6 +26,12 @@ android {
     }
 }
 
+greendao {
+    schemaVersion 1
+    targetGenDir 'src/main/java'
+    daoPackage 'com.lee.leewanandroid.entities.greedao'
+}
+
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
@@ -38,6 +46,7 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 
     implementation 'com.github.githubwing:ByeBurger:1.2.3'
+    implementation 'org.greenrobot:greendao:3.2.2'
 
     implementation 'com.scwang.smartrefresh:SmartRefreshLayout:' + rootProject.ext.smartrefreshVersion
     implementation 'com.scwang.smartrefresh:SmartRefreshHeader:' + rootProject.ext.smartrefreshVersion

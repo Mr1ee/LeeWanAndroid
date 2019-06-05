@@ -1,9 +1,9 @@
 package com.lee.leewanandroid.ui.base
 
-interface IPresenter<T> {
-    var view: T
+interface IPresenter<T : IView> {
+    var mView: T
 
     fun subscribe()
 
-    fun unsubscribe()
+    fun detachView()
 }

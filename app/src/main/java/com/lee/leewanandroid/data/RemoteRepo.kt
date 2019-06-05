@@ -1,5 +1,9 @@
 package com.lee.leewanandroid.data
 
+import android.content.Context
+import android.content.SharedPreferences
+import com.lee.leewanandroid.Constants
+import com.lee.leewanandroid.WanAndroidApp
 import com.lee.leewanandroid.entities.article.*
 import com.lee.leewanandroid.entities.todo.TodoItemData
 import com.lee.leewanandroid.entities.todo.TodoListData
@@ -7,13 +11,33 @@ import com.lee.leewanandroid.net.BaseResponse
 import com.lee.leewanandroid.net.RetrofitServiceManager
 import io.reactivex.Observable
 
-class RemoteRepo : DataSource {
+class RemoteRepo : DataSource, PreferenceHelper {
 
     companion object {
         val instance: RemoteRepo by lazy(mode = LazyThreadSafetyMode.SYNCHRONIZED) {
             RemoteRepo()
         }
     }
+
+    private val mPreferences: SharedPreferences = WanAndroidApp.mContext.getSharedPreferences(
+        Constants.MY_SHARED_PREFERENCE, Context.MODE_PRIVATE
+    )
+
+    override var loginStatus: Boolean
+        get() = mPreferences.getBoolean(Constants.LOGIN_STATUS, false)
+        set(value) {
+            mPreferences.edit().putBoolean(Constants.LOGIN_STATUS, value).apply()
+        }
+    override var loginAccount: String
+        get() = mPreferences.getString(Constants.ACCOUNT, "") ?: ""
+        set(value) {
+            mPreferences.edit().putString(Constants.ACCOUNT, value).apply()
+        }
+    override var isNightMode: Boolean
+        get() = mPreferences.getBoolean(Constants.NIGHT_MODE, false)
+        set(value) {
+            mPreferences.edit().putBoolean(Constants.NIGHT_MODE, value).apply()
+        }
 
     private val mService = RetrofitServiceManager.getInstance().create(ApiService::class.java)
     /**
@@ -270,7 +294,7 @@ class RemoteRepo : DataSource {
 
     /**
      * 获取TODO列表
-     * https://www.wanandroid.com/lg/todo/v2/list/{page}/json
+     * https://www.wanandroid.com/lg/to\do/v2/list/{page}/json
      *
      *
      * 页码从1开始，拼接在url 上
@@ -290,7 +314,7 @@ class RemoteRepo : DataSource {
 
     /**
      * 新增一条TODO
-     * https://www.wanandroid.com/lg/todo/add/json
+     * https://www.wanandroid.com/lg/to\do/add/json
      *
      *
      * title: 新增标题（必须）
@@ -307,7 +331,7 @@ class RemoteRepo : DataSource {
 
     /**
      * 更新一条TODO
-     * https://www.wanandroid.com/lg/todo/update/{id}/json
+     * https://www.wanandroid.com/lg/to\do/update/{id}/json
      *
      *
      * id: 拼接在链接上，为唯一标识
@@ -329,7 +353,7 @@ class RemoteRepo : DataSource {
 
     /**
      * 删除一条TODO
-     * https://www.wanandroid.com/lg/todo/delete/{id}/json
+     * https://www.wanandroid.com/lg/to\do/delete/{id}/json
      *
      *
      * id: 拼接在链接上，为唯一标识
@@ -342,7 +366,7 @@ class RemoteRepo : DataSource {
 
     /**
      * 仅更新完成状态TODO
-     * https://www.wanandroid.com/lg/todo/done/{id}/json
+     * https://www.wanandroid.com/lg/to\do/done/{id}/json
      *
      *
      * id: 拼接在链接上，为唯一标识

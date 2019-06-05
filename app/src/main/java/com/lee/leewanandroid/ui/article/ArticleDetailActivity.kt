@@ -19,17 +19,18 @@ import com.just.agentweb.NestedScrollAgentWebView
 import com.lee.leewanandroid.Constants
 import com.lee.leewanandroid.R
 import com.lee.leewanandroid.entities.article.ArticleItemData
-import com.lee.leewanandroid.ui.base.BaseActivity
+import com.lee.leewanandroid.ui.base.BaseMvpActivity
 import com.lee.leewanandroid.utils.Logger
 import com.tbruyelle.rxpermissions2.RxPermissions
 import kotlinx.android.synthetic.main.activity_article_detail.*
 import kotlinx.android.synthetic.main.layout_toolbar.*
 
-class ArticleDetailActivity : BaseActivity(), Contract.View {
+class ArticleDetailActivity : BaseMvpActivity<Contract.View, ArticlePresenter>(),
+    Contract.View {
     companion object {
         private var TAG = ArticleDetailActivity::class.java.simpleName
         private const val EXTRA_ARTICLE = "extra_article"
-        private const val EXTRA_SHOW_COLLECT_ICON = "extra_show_ccollect_icon"
+        private const val EXTRA_SHOW_COLLECT_ICON = "extra_show_collect_icon"
 
         fun navigation(
             context: Context,
@@ -62,6 +63,8 @@ class ArticleDetailActivity : BaseActivity(), Contract.View {
         }
     }
 
+    override val mPresenter: ArticlePresenter = ArticlePresenter(this)
+
     private lateinit var mArticle: ArticleItemData
     private var mShowCollectIcon: Boolean = false
 
@@ -69,16 +72,9 @@ class ArticleDetailActivity : BaseActivity(), Contract.View {
 
     private lateinit var mAgentWeb: AgentWeb
 
-    private lateinit var mPresenter: ArticlePresenter
-
-
     override fun getLayoutId(): Int = R.layout.activity_article_detail
 
     override fun initView() {
-        parseExtra(intent)
-
-        mPresenter = ArticlePresenter(this)
-
         initToolbar()
         initAgentWeb()
     }
@@ -96,18 +92,16 @@ class ArticleDetailActivity : BaseActivity(), Contract.View {
             }
             toolbar_title.isSelected = true
         }
-
-        toolbar.setNavigationOnClickListener { onBackPressed() }
     }
 
     private fun initAgentWeb() {
-        @Suppress("DEPRECATION")
         val webChromeClient = object : WebChromeClient() {
             override fun onReceivedTitle(view: WebView, title: String) {
                 super.onReceivedTitle(view, title)
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                     toolbar_title.text = Html.fromHtml(title, Html.FROM_HTML_MODE_LEGACY)
                 } else {
+                    @Suppress("DEPRECATION")
                     toolbar_title.text = Html.fromHtml(title)
                 }
             }
@@ -128,7 +122,7 @@ class ArticleDetailActivity : BaseActivity(), Contract.View {
             .go(mArticle.link)
     }
 
-    private fun parseExtra(intent: Intent?) {
+    override fun parseExtra(intent: Intent?) {
         try {
             intent?.extras?.getSerializable(EXTRA_ARTICLE)?.let {
                 mArticle = it as ArticleItemData
@@ -143,6 +137,11 @@ class ArticleDetailActivity : BaseActivity(), Contract.View {
         }
     }
 
+
+    override fun setClickListener() {
+        toolbar.setNavigationOnClickListener { onBackPressed() }
+    }
+
     override fun shareArticle() {
         val intent = Intent(Intent.ACTION_SEND)
         intent.putExtra(
@@ -155,9 +154,6 @@ class ArticleDetailActivity : BaseActivity(), Contract.View {
 
     override fun shareError() {
         showToast(R.string.write_permission_not_allowed)
-    }
-
-    override fun setLoadingStatus(active: Boolean) {
     }
 
     override fun onBackPressed() {

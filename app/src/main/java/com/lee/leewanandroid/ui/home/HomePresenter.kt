@@ -9,8 +9,9 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.functions.BiFunction
 import io.reactivex.schedulers.Schedulers
 
-class HomePresenter(override var view: Contract.View) : Contract.Presenter
+class HomePresenter(override var mView: Contract.View) : Contract.Presenter
     , BasePresenter<Contract.View>() {
+
     companion object {
         private var TAG = HomePresenter::class.java.simpleName
     }
@@ -34,7 +35,7 @@ class HomePresenter(override var view: Contract.View) : Contract.Presenter
                 }
             }
             .subscribe({
-                view.showBanners(it)
+                mView.showBanners(it)
             }, {
                 Logger.e(TAG, "", it)
             }).gather()
@@ -53,7 +54,7 @@ class HomePresenter(override var view: Contract.View) : Contract.Presenter
                 }
             }
             .subscribe({
-                view.showTopArticle(it)
+                mView.showTopArticle(it)
             }, {
                 Logger.e(TAG, "", it)
             }).gather()
@@ -72,7 +73,7 @@ class HomePresenter(override var view: Contract.View) : Contract.Presenter
                 }
             }
             .subscribe({
-                view.showArticles(it?.datas, isRefresh)
+                mView.showArticles(it?.datas, isRefresh)
             }, {
                 Logger.e(TAG, "", it)
             }).gather()
@@ -104,7 +105,7 @@ class HomePresenter(override var view: Contract.View) : Contract.Presenter
             }
         }).subscribeOn(Schedulers.newThread())
             .observeOn(AndroidSchedulers.mainThread()).subscribe({
-                view.showArticles(it, isRefresh)
+                mView.showArticles(it, isRefresh)
             }, {
                 Logger.e(TAG, "", it)
             }).gather()

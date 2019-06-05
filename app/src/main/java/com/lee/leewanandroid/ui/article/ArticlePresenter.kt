@@ -2,9 +2,11 @@ package com.lee.leewanandroid.ui.article
 
 import android.Manifest
 import com.lee.leewanandroid.ui.base.BasePresenter
+import com.lee.leewanandroid.ui.base.IPresenter
+import com.lee.leewanandroid.ui.base.IView
 import com.tbruyelle.rxpermissions2.RxPermissions
 
-class ArticlePresenter(override var view: Contract.View) : Contract.Presenter,
+class ArticlePresenter(override var mView: Contract.View) : Contract.Presenter<Contract.View>,
     BasePresenter<Contract.View>() {
 
     companion object {
@@ -16,9 +18,9 @@ class ArticlePresenter(override var view: Contract.View) : Contract.Presenter,
             .request(Manifest.permission.WRITE_EXTERNAL_STORAGE)
             .subscribe { granted ->
                 if (granted == true) {
-                    view.shareArticle()
+                    mView.shareArticle()
                 } else {
-                    view.shareError()
+                    mView.shareError()
                 }
             }.gather()
     }

@@ -6,7 +6,7 @@ import com.lee.leewanandroid.R
 import com.lee.leewanandroid.entities.article.ArticleItemData
 import com.lee.leewanandroid.entities.article.BannerData
 import com.lee.leewanandroid.ui.article.ArticleDetailActivity
-import com.lee.leewanandroid.ui.base.BaseFragment
+import com.lee.leewanandroid.ui.base.BaseMvpFragment
 import com.lee.leewanandroid.utils.Logger
 import com.lee.leewanandroid.widget.BannerGlideImageLoader
 import com.youth.banner.BannerConfig
@@ -15,23 +15,16 @@ import kotlinx.android.synthetic.main.fragment_main_page.*
 import kotlinx.android.synthetic.main.fragment_main_page.view.*
 import kotlinx.android.synthetic.main.main_head_banner.*
 
-class HomeFragment : BaseFragment(), Contract.View {
+class HomeFragment : BaseMvpFragment<Contract.View, HomePresenter>(), Contract.View {
     companion object {
         private var TAG = HomeFragment::class.java.simpleName
 
         fun newInstance(): HomeFragment = HomeFragment()
     }
 
-    private lateinit var mPresenter: HomePresenter
     private lateinit var mAdapter: ArticleListAdapter
 
-    override fun setLoadingStatus(active: Boolean) {
-        if (active) {
-
-        } else {
-
-        }
-    }
+    override val mPresenter: HomePresenter = HomePresenter(this)
 
     override fun showBanners(banners: List<BannerData>?) {
         banners?.let {
@@ -103,8 +96,6 @@ class HomeFragment : BaseFragment(), Contract.View {
     override fun initView(view: View) {
         initRefreshLayout(view)
         initRecyclerView(view)
-
-        mPresenter = HomePresenter(this)
         mPresenter.refreshLayout(true)
     }
 

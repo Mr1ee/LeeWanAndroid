@@ -25,6 +25,7 @@ abstract class BaseFragment : Fragment() {
     }
 
     abstract fun initView(view: View)
+
     abstract fun getLayoutId(): Int
 
     /**

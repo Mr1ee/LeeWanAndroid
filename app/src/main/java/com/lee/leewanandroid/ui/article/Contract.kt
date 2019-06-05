@@ -12,7 +12,7 @@ interface Contract {
         fun shareError()
     }
 
-    interface Presenter : IPresenter<View> {
+    interface Presenter<T : IView> : IPresenter<T> {
         fun shareEventWithPermissionVerify(rxPermissions: RxPermissions)
 
     }

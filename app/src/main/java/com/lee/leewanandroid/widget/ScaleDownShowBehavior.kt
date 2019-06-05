@@ -14,7 +14,7 @@ import com.lee.leewanandroid.utils.AnimatorUtil
  */
 @Suppress("unused")
 class ScaleDownShowBehavior(context: Context, attrs: AttributeSet) :
-    FloatingActionButton.Behavior() {
+    FloatingActionButton.Behavior(context, attrs) {
 
     /**
      * 是否正在动画
