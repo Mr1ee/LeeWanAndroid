@@ -11,6 +11,7 @@ import com.lee.leewanandroid.Constants
 import com.lee.leewanandroid.R
 import com.lee.leewanandroid.ui.base.BaseActivity
 import com.lee.leewanandroid.ui.home.HomeFragment
+import com.lee.leewanandroid.ui.knowledge.KnowledgeFragment
 import com.lee.leewanandroid.widget.ToastUtils
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.layout_toolbar.*
@@ -22,7 +23,7 @@ class MainActivity : BaseActivity() {
     }
 
     private var mHomePagerFragment: HomeFragment? = null
-    private var mKnowledgeFragment: HomeFragment? = null
+    private var mKnowledgeFragment: KnowledgeFragment? = null
     private var mNavigationFragment: HomeFragment? = null
     private var mWxArticleFragment: HomeFragment? = null
     private var mProjectFragment: HomeFragment? = null
@@ -86,7 +87,7 @@ class MainActivity : BaseActivity() {
             Constants.TYPE_KNOWLEDGE -> {
                 toolbar_title.text = getString(R.string.knowledge_hierarchy)
                 if (mKnowledgeFragment == null) {
-                    mKnowledgeFragment = HomeFragment.newInstance()
+                    mKnowledgeFragment = KnowledgeFragment.newInstance()
                     mKnowledgeFragment?.let {
                         transaction.add(R.id.fragment_group, it)
                     }
