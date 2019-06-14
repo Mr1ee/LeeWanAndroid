@@ -4,9 +4,10 @@ import com.lee.leewanandroid.algorithm.sort.interfaces.ISort
 import java.util.ArrayList
 
 /**
- * 外部排序
+ *
+ * @Description:    BucketSort 桶排序
  */
-class ExternalSort : ISort<Int> {
+class BucketSort : ISort<Int> {
     override fun sort(data: ArrayList<Int>): MutableList<Int> {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }

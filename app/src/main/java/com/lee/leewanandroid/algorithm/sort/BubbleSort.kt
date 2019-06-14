@@ -3,6 +3,9 @@ package com.lee.leewanandroid.algorithm.sort
 import com.lee.leewanandroid.algorithm.sort.interfaces.ISort
 import java.util.ArrayList
 
+/**
+ * 冒泡排序
+ */
 class BubbleSort : ISort<Int> {
     override fun sort(data: ArrayList<Int>): MutableList<Int> {
         println("algorithm " + this::class.java.simpleName + " start!!!")

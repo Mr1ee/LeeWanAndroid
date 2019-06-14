@@ -4,6 +4,9 @@ import com.lee.leewanandroid.algorithm.sort.interfaces.ISort
 import java.util.ArrayList
 import kotlin.random.Random
 
+/**
+ * 快排
+ */
 class QuickSort : ISort<Int> {
     override fun sort(data: ArrayList<Int>): MutableList<Int> {
         println("algorithm " + this::class.java.simpleName + " start!!!")

@@ -3,6 +3,9 @@ package com.lee.leewanandroid.algorithm.sort
 import com.lee.leewanandroid.algorithm.sort.interfaces.IInsetSort
 import java.util.*
 
+/**
+ * 直接插入排序
+ */
 class StraightInsertionSort : IInsetSort<Int> {
     override var gab: Int = 1
 

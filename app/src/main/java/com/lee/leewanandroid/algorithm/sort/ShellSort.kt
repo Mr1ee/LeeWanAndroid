@@ -3,12 +3,15 @@ package com.lee.leewanandroid.algorithm.sort
 import com.lee.leewanandroid.algorithm.sort.interfaces.IInsetSort
 import java.util.*
 
+/**
+ * 希尔排序
+ */
 class ShellSort : IInsetSort<Int> {
     override var gab: Int = 1
 
     override fun sort(data: ArrayList<Int>): MutableList<Int> {
         println("algorithm " + this@ShellSort::class.java.simpleName + " start!!!")
-        var gab = data.size
+        gab = data.size
         while (gab > 1) {
             gab = gab / 3 + 1
             for (i in gab until data.size) {
