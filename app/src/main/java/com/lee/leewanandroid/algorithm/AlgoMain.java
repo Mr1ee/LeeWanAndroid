@@ -10,7 +10,13 @@ public class AlgoMain {
     public static ArrayList<Integer> data = new ArrayList<>(Arrays.asList(2, 9, 4, 7, 5, 8, 1, 3, 6, 10));
     public static ArrayList<Integer> data1 = new ArrayList<>(Arrays.asList(542, 3521, 13459, 852, 742, 46, 2, 1, 633, 32));
 
-    public static ArrayList<String> treeData = new ArrayList<>(Arrays.asList("A", "B", "C", "D", "E", "F", "G", "H", "I", "#", "#", "#", "J"));
+    public static ArrayList<String> treeData = new ArrayList<>(Arrays.asList("A", "B", "C", "D", "E", "F", "G", "#", "#", "H", "I", "#", "J"));
+    public static ArrayList<String> treeData_pre = new ArrayList<>(Arrays.asList("A", "B", "D", "#", "#", "E", "H",
+            "#", "#", "I", "#", "#", "C", "F", "#", "J", "#", "#", "G", "#", "#"));
+
+    public static String preOrderStr = "ABDEHICFJG";
+    public static String inOrderStr = "DBHEIAFJCG";
+    public static String postOrderStr = "DHIEBJFGCA";
 
     public static void main(String[] args) {
 
@@ -43,17 +49,19 @@ public class AlgoMain {
 
 
         /**
-         * [A B C D E F G H I # # # J]
+         * 层序遍历构建串 [A B C D E F G # # H I # J]
+         *
+         * 先序遍历构建串 [A B D # # E H # # I # # C F # J # # G # #]
          *              A
          *            /   \
          *           B     C
          *         / \    / \
          *        D  E   F   G
-         *       /\       \
-         *      H  I       J
+         *          / \   \
+         *         H  I    J
          */
         Tree<String> tree = new Tree<>();
-        tree.createTree(treeData);
+        tree.createTree(treeData_pre);
         System.out.println("level order");
         tree.levelOrderTraverse(tree.getRoot());
         System.out.println("\n\npre order recursive");
@@ -66,6 +74,24 @@ public class AlgoMain {
         tree.inOrderTraverse(tree.getRoot());
         System.out.println("\n\npost order recursive");
         tree.postOrderTraverseR(tree.getRoot());
+        System.out.println("\n\npost order");
+        tree.postOrderTraverse(tree.getRoot());
+
+        System.out.println("\n");
+        tree.buildTree(preOrderStr, inOrderStr);
+        System.out.println("\n\npre order");
+        tree.preOrderTraverse(tree.getRoot());
+        System.out.println("\n\nin order");
+        tree.inOrderTraverse(tree.getRoot());
+        System.out.println("\n\npost order");
+        tree.postOrderTraverse(tree.getRoot());
+
+        System.out.println("\n");
+        tree.buildTree2(postOrderStr, inOrderStr);
+        System.out.println("\n\npre order");
+        tree.preOrderTraverse(tree.getRoot());
+        System.out.println("\n\nin order");
+        tree.inOrderTraverse(tree.getRoot());
         System.out.println("\n\npost order");
         tree.postOrderTraverse(tree.getRoot());
 

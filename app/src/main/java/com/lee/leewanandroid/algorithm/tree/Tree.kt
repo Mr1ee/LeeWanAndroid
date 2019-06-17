@@ -14,21 +14,34 @@ import java.util.*
  */
 class Tree<T> {
     /**
-     * [A B C D E F G H I # # # J]
-     * 层序遍历
+     * 层序遍历构建串 [A B C D E F G # # H I # J]
+     *
+     * 先序遍历构建串 [A B D # # E H # # I # # C F # J # # G # #]
+     *
+     * 中序遍历构建串 [D B H E I A F J C G]
+     *
+     * 后序遍历构建串 [D H I E B J F G C A]
+     *
      *              A
      *            /   \
      *           B     C
      *         / \    / \
      *        D  E   F   G
-     *       /\       \
-     *      H  I       J
+     *          / \   \
+     *         H  I    J
      */
 
     var root: Node<T>? = null
 
-    fun createTree(data: ArrayList<T>) {
-        root = createTreeByLevelOrder(data)
+    open fun createTree(data: ArrayList<T>) {
+        val stack = Stack<T>()
+        for (i in data.size - 1 downTo 0) {
+            stack.push(data[i])
+        }
+        println(stack)
+
+//        root = createTreeByLevelOrder(data)
+        root = createTreeByPreOrder(stack)
     }
 
     /**
@@ -58,6 +71,61 @@ class Tree<T> {
         }
 
         return root
+    }
+
+    fun createTreeByPreOrder(data: Stack<T>): Node<T>? {
+        if (data.isEmpty()) return null
+        val value = data.pop()
+        return if (value != "#") {
+            val parent: Node<T> = Node(value)
+            parent.left = createTreeByPreOrder(data)
+            parent.right = createTreeByPreOrder(data)
+            parent
+        } else {
+            null
+        }
+    }
+
+    fun buildTree(preOrder: String?, inOrder: String?) {
+        root = buildTreeInner(preOrder, inOrder) as Node<T>
+    }
+
+    fun buildTree2(postOrder: String?, inOrder: String?) {
+        root = buildTreeInner2(postOrder, inOrder) as Node<T>
+    }
+
+    /**
+     * 用前序遍历串和后序遍历串重建二叉树
+     * @param preOrder 前序遍历串
+     * @param inOrder  中序遍历串
+     */
+    private fun buildTreeInner(preOrder: String?, inOrder: String?): Node<Char>? {
+        if (preOrder.isNullOrEmpty() || inOrder.isNullOrEmpty()) return null
+        val parent = Node(preOrder.first())
+        val length = inOrder.indexOf(preOrder.first())
+        parent.left =
+            buildTreeInner(preOrder.substring(1, length + 1), inOrder.substring(0, length))
+        parent.right = buildTreeInner(preOrder.substring(length + 1), inOrder.substring(length + 1))
+        return parent
+    }
+
+    /**
+     * 用后序遍历串和后序遍历串重建二叉树
+     * @param postOrder 后序遍历串
+     * @param inOrder   中序遍历串
+     */
+    private fun buildTreeInner2(postOrder: String?, inOrder: String?): Node<Char>? {
+        if (postOrder.isNullOrEmpty() || inOrder.isNullOrEmpty()) return null
+        val parent = Node(postOrder.last())
+        val length = inOrder.indexOf(postOrder.last())
+        parent.left =
+            buildTreeInner2(postOrder.substring(0, length), inOrder.substring(0, length))
+        parent.right =
+            buildTreeInner2(
+                postOrder.substring(length, postOrder.lastIndex),
+                inOrder.substring(length + 1)
+            )
+        return parent
     }
 
     fun levelOrderTraverse(root: Node<T>) {
