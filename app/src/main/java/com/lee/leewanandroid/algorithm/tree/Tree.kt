@@ -12,7 +12,7 @@ import java.util.*
  * @UpdateRemark:
  * @Version:        1.0
  */
-class Tree<T> {
+open class Tree<T> {
     /**
      * 层序遍历构建串 [A B C D E F G # # H I # J]
      *

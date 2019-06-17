@@ -1,5 +1,6 @@
 package com.lee.leewanandroid.algorithm;
 
+import com.lee.leewanandroid.algorithm.tree.BinarySearchTree;
 import com.lee.leewanandroid.algorithm.tree.Tree;
 
 import java.util.ArrayList;
@@ -61,21 +62,21 @@ public class AlgoMain {
          *         H  I    J
          */
         Tree<String> tree = new Tree<>();
-        tree.createTree(treeData_pre);
-        System.out.println("level order");
-        tree.levelOrderTraverse(tree.getRoot());
-        System.out.println("\n\npre order recursive");
-        tree.preOrderTraverseR(tree.getRoot());
-        System.out.println("\n\npre order");
-        tree.preOrderTraverse(tree.getRoot());
-        System.out.println("\n\nin order recursive");
-        tree.inOrderTraverseR(tree.getRoot());
-        System.out.println("\n\nin order");
-        tree.inOrderTraverse(tree.getRoot());
-        System.out.println("\n\npost order recursive");
-        tree.postOrderTraverseR(tree.getRoot());
-        System.out.println("\n\npost order");
-        tree.postOrderTraverse(tree.getRoot());
+//        tree.createTree(treeData_pre);
+//        System.out.println("level order");
+//        tree.levelOrderTraverse(tree.getRoot());
+//        System.out.println("\n\npre order recursive");
+//        tree.preOrderTraverseR(tree.getRoot());
+//        System.out.println("\n\npre order");
+//        tree.preOrderTraverse(tree.getRoot());
+//        System.out.println("\n\nin order recursive");
+//        tree.inOrderTraverseR(tree.getRoot());
+//        System.out.println("\n\nin order");
+//        tree.inOrderTraverse(tree.getRoot());
+//        System.out.println("\n\npost order recursive");
+//        tree.postOrderTraverseR(tree.getRoot());
+//        System.out.println("\n\npost order");
+//        tree.postOrderTraverse(tree.getRoot());
 
         System.out.println("\n");
         tree.buildTree(preOrderStr, inOrderStr);
@@ -94,6 +95,21 @@ public class AlgoMain {
         tree.inOrderTraverse(tree.getRoot());
         System.out.println("\n\npost order");
         tree.postOrderTraverse(tree.getRoot());
+
+        BinarySearchTree<Integer> bst = new BinarySearchTree<>();
+        bst.insert(1);
+        bst.insert(2);
+        bst.insert(3);
+        bst.insert(4);
+        bst.insert(5);
+        bst.insert(6);
+        bst.insert(7);
+        System.out.println("\n\nbst pre order");
+        bst.preOrderTraverse(tree.getRoot());
+        System.out.println("\n\nbst in order");
+        bst.inOrderTraverse(tree.getRoot());
+        System.out.println("\n\nbst post order");
+        bst.postOrderTraverse(tree.getRoot());
 
     }
 }
