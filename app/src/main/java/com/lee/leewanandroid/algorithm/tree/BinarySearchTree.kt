@@ -21,7 +21,7 @@ package com.lee.leewanandroid.algorithm.tree
  *       \
  *       37
  */
-class BinarySearchTree<T> : Tree<T>(), ITreeAction<T> {
+class BinarySearchTree<T : Comparable<T>> : Tree<T>(), ITreeAction<T> {
 
     /**
      * 没有指针的二叉树删除太操蛋了，不干了！！~！~
@@ -68,33 +68,6 @@ class BinarySearchTree<T> : Tree<T>(), ITreeAction<T> {
         return parent
     }
 
-    fun findParent(value: T): Node<T>? {
-        var parent = root
-        while (parent != null) {
-            when {
-                value == parent.left?.value -> {
-                    return parent
-                }
-                value > parent.value -> {
-                    if (parent.right != null) {
-                        parent = parent.right
-                    } else {
-                        return null
-                    }
-                }
-                else -> {
-                    if (parent.left != null) {
-                        parent = parent.left
-                    } else {
-                        return null
-                    }
-                }
-            }
-        }
-
-        return null
-    }
-
     override fun find(value: T): Node<T>? {
         var parent = root
         while (parent != null) {
@@ -102,7 +75,7 @@ class BinarySearchTree<T> : Tree<T>(), ITreeAction<T> {
                 value == parent.value -> {
                     return parent
                 }
-                value > parent.value -> {
+                value > parent.value!! -> {
                     if (parent.right != null) {
                         parent = parent.right
                     } else {
@@ -132,7 +105,7 @@ class BinarySearchTree<T> : Tree<T>(), ITreeAction<T> {
                     parent.value == value -> {
                         return false
                     }
-                    value > parent.value -> {
+                    value > parent.value!! -> {
                         if (parent.right == null) {
                             parent.right = Node(value)
                             return true
@@ -154,15 +127,4 @@ class BinarySearchTree<T> : Tree<T>(), ITreeAction<T> {
         return false
     }
 
-}
-
-private operator fun <T> T.compareTo(value: T?): Int {
-    return when (value) {
-        is Int -> (this as Int).compareTo(value)
-        is Long -> (this as Long).compareTo(value)
-        is Double -> (this as Double).compareTo(value)
-        is Float -> (this as Float).compareTo(value)
-        is Char -> (this as Char).compareTo(value)
-        else -> (this as Int).compareTo(value)
-    }
 }
