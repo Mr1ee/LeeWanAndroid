@@ -9,38 +9,117 @@ package com.lee.leewanandroid.algorithm.tree
  * @UpdateDate:     2019-06-17 18:19
  * @UpdateRemark:
  * @Version:        1.0
+ *
+ *  in order [35 37 47 58 62 73 88 93 99]
+ *              62
+ *            /   \
+ *          58     88
+ *         /      /  \
+ *        47     73  99
+ *       /  \        /
+ *      35  51      93
+ *       \
+ *       37
  */
 class BinarySearchTree<T> : Tree<T>(), ITreeAction<T> {
 
+    /**
+     * 没有指针的二叉树删除太操蛋了，不干了！！~！~
+     */
     override fun remove(value: T): Boolean {
+        var node = find(value)
+        node?.let {
+            if (it.left == null && it.right == null) {
+                node = null
+                return true
+            } else if (it.left == null) {
+                node = it.right
+            } else if (it.right == null) {
+                node = it.left
+            } else {
+                //找到左子树的最大，或者右子树的最小节点
+                val rMin: Node<T> = findMin(checkNotNull(it.right))
+                it.value = rMin.value
+                //kotlin 和java中没有指针，所以删除rMin就很操蛋了。
+            }
+        }
         return false
     }
 
-    override fun find(value: T): Boolean {
+    fun findMin(p: Node<T>): Node<T> {
+        var parent: Node<T> = p
+        while (parent.left != null) {
+            parent.left?.let {
+                parent = it
+            }
+        }
+
+        return parent
+    }
+
+    fun findMax(p: Node<T>): Node<T> {
+        var parent: Node<T> = p
+        while (parent.right != null) {
+            parent.right?.let {
+                parent = it
+            }
+        }
+
+        return parent
+    }
+
+    fun findParent(value: T): Node<T>? {
         var parent = root
         while (parent != null) {
             when {
-                value == parent.value -> {
-                    return true
+                value == parent.left?.value -> {
+                    return parent
                 }
                 value > parent.value -> {
                     if (parent.right != null) {
                         parent = parent.right
                     } else {
-                        return false
+                        return null
                     }
                 }
                 else -> {
                     if (parent.left != null) {
                         parent = parent.left
                     } else {
-                        return false
+                        return null
                     }
                 }
             }
         }
 
-        return false
+        return null
+    }
+
+    override fun find(value: T): Node<T>? {
+        var parent = root
+        while (parent != null) {
+            when {
+                value == parent.value -> {
+                    return parent
+                }
+                value > parent.value -> {
+                    if (parent.right != null) {
+                        parent = parent.right
+                    } else {
+                        return null
+                    }
+                }
+                else -> {
+                    if (parent.left != null) {
+                        parent = parent.left
+                    } else {
+                        return null
+                    }
+                }
+            }
+        }
+
+        return null
     }
 
     override fun insert(value: T): Boolean {
@@ -54,7 +133,7 @@ class BinarySearchTree<T> : Tree<T>(), ITreeAction<T> {
                         return false
                     }
                     value > parent.value -> {
-                        if (parent.right != null) {
+                        if (parent.right == null) {
                             parent.right = Node(value)
                             return true
                         } else {
@@ -62,7 +141,7 @@ class BinarySearchTree<T> : Tree<T>(), ITreeAction<T> {
                         }
                     }
                     else -> {
-                        if (parent.left != null) {
+                        if (parent.left == null) {
                             parent.left = Node(value)
                             return true
                         } else {
