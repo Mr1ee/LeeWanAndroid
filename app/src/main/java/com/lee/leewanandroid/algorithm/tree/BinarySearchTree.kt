@@ -16,10 +16,12 @@ package com.lee.leewanandroid.algorithm.tree
  *          58     88
  *         /      /  \
  *        47     73  99
- *       /  \        /
- *      35  51      93
- *       \
- *       37
+ *       /  \        / \
+ *      35  51      93 100
+ *       \           \
+ *       37           97
+ *                   /
+ *                  95
  */
 class BinarySearchTree<T : Comparable<T>> : Tree<T>(), ITreeAction<T> {
 
@@ -29,7 +31,7 @@ class BinarySearchTree<T : Comparable<T>> : Tree<T>(), ITreeAction<T> {
     override fun remove(value: T): Boolean {
         val node = find(value)
         node?.let {
-            if (it.left == null && it.right == null) {
+            if (it.isLeaf()) {
                 it.parent?.right = null
                 return true
             } else if (it.left == null) {
@@ -46,10 +48,10 @@ class BinarySearchTree<T : Comparable<T>> : Tree<T>(), ITreeAction<T> {
                 }
             } else {
                 //找到左子树的最大，或者右子树的最小节点
-                val rMin: TNode<T> = findMin(checkNotNull(it.right as TNode<T>))
-                it.value = rMin.value
+                val lMax: TNode<T> = findMax(checkNotNull(it.left as TNode<T>))
+                it.value = lMax.value
                 //kotlin 和java中没有指针，所以删除rMin就很操蛋了。
-                rMin.parent?.left = null
+                lMax.parent?.right = lMax.left
             }
         }
 
@@ -135,5 +137,9 @@ class BinarySearchTree<T : Comparable<T>> : Tree<T>(), ITreeAction<T> {
             }
         }
         return false
+    }
+
+    private fun Node<T>.isLeaf(): Boolean {
+        return this.left == null && this.right == null
     }
 }

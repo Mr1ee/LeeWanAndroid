@@ -108,6 +108,9 @@ public class AlgoMain {
         bst.insert(73);
         bst.insert(99);
         bst.insert(93);
+        bst.insert(97);
+        bst.insert(95);
+        bst.insert(100);
         System.out.println("\n\nbst pre order");
         bst.preOrderTraverse(bst.getRoot());
         System.out.println("\n\nbst in order");
@@ -115,21 +118,12 @@ public class AlgoMain {
         System.out.println("\n\nbst post order");
         bst.postOrderTraverse(bst.getRoot());
 
-        bst.remove(58);
-        System.out.println("\n\nremove 58 pre order");
+        bst.remove(99);
+        System.out.println("\n\nremove 99 pre order");
         bst.preOrderTraverse(bst.getRoot());
-        System.out.println("\n\nremove 58 in order");
+        System.out.println("\n\nremove 99 in order");
         bst.inOrderTraverse(bst.getRoot());
-        System.out.println("\n\nremove 58 post order");
+        System.out.println("\n\nremove 99 post order");
         bst.postOrderTraverse(bst.getRoot());
-
-        System.out.println(bst.remove(51) ? "\nremove 51 " : "\nNOT FOUND 51!");
-        System.out.println("\n\nremove 51 pre order");
-        bst.preOrderTraverse(bst.getRoot());
-        System.out.println("\n\nremove 51 in order");
-        bst.inOrderTraverse(bst.getRoot());
-        System.out.println("\n\nremove 51 post order");
-        bst.postOrderTraverse(bst.getRoot());
-
     }
 }
