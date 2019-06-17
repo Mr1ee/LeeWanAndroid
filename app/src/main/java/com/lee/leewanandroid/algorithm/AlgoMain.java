@@ -1,14 +1,6 @@
 package com.lee.leewanandroid.algorithm;
 
-import com.lee.leewanandroid.algorithm.sort.CountingSort;
-import com.lee.leewanandroid.algorithm.sort.HeapSort;
-import com.lee.leewanandroid.algorithm.sort.MergeSort;
-import com.lee.leewanandroid.algorithm.sort.QuickSort;
-import com.lee.leewanandroid.algorithm.sort.RadixSort;
-import com.lee.leewanandroid.algorithm.sort.SelectionSort;
-import com.lee.leewanandroid.algorithm.sort.interfaces.ISort;
-import com.lee.leewanandroid.algorithm.sort.ShellSort;
-import com.lee.leewanandroid.algorithm.sort.StraightInsertionSort;
+import com.lee.leewanandroid.algorithm.tree.Tree;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -17,6 +9,8 @@ public class AlgoMain {
 
     public static ArrayList<Integer> data = new ArrayList<>(Arrays.asList(2, 9, 4, 7, 5, 8, 1, 3, 6, 10));
     public static ArrayList<Integer> data1 = new ArrayList<>(Arrays.asList(542, 3521, 13459, 852, 742, 46, 2, 1, 633, 32));
+
+    public static ArrayList<String> treeData = new ArrayList<>(Arrays.asList("A", "B", "C", "D", "E", "F", "G", "H", "I", "#", "#", "#", "J"));
 
     public static void main(String[] args) {
 
@@ -44,7 +38,36 @@ public class AlgoMain {
 //        ISort<Integer> radixSort = new RadixSort();
 //        System.out.println(radixSort.sort((ArrayList<Integer>) data1.clone()) + "\n\n");
 
-        ISort<Integer> heapSort = new HeapSort();
-        System.out.println(heapSort.sort((ArrayList<Integer>) data.clone()) + "\n\n");
+//        ISort<Integer> heapSort = new HeapSort();
+//        System.out.println(heapSort.sort((ArrayList<Integer>) data.clone()) + "\n\n");
+
+
+        /**
+         * [A B C D E F G H I # # # J]
+         *              A
+         *            /   \
+         *           B     C
+         *         / \    / \
+         *        D  E   F   G
+         *       /\       \
+         *      H  I       J
+         */
+        Tree<String> tree = new Tree<>();
+        tree.createTree(treeData);
+        System.out.println("level order");
+        tree.levelOrderTraverse(tree.getRoot());
+        System.out.println("\n\npre order recursive");
+        tree.preOrderTraverseR(tree.getRoot());
+        System.out.println("\n\npre order");
+        tree.preOrderTraverse(tree.getRoot());
+        System.out.println("\n\nin order recursive");
+        tree.inOrderTraverseR(tree.getRoot());
+        System.out.println("\n\nin order");
+        tree.inOrderTraverse(tree.getRoot());
+        System.out.println("\n\npost order recursive");
+        tree.postOrderTraverseR(tree.getRoot());
+        System.out.println("\n\npost order");
+        tree.postOrderTraverse(tree.getRoot());
+
     }
 }

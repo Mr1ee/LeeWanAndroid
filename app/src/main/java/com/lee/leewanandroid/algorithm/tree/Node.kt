@@ -1,7 +1,7 @@
 package com.lee.leewanandroid.algorithm.tree
 
-abstract class Node<T> {
+open class Node<T>(t: T) {
     var left: Node<T>? = null
     var right: Node<T>? = null
-    abstract var value: T
+    open var value: T? = t
 }
