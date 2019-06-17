@@ -16,5 +16,5 @@ interface ITreeAction<T> {
 
     fun remove(value: T): Boolean
 
-    fun find(value: T): Node<T>?
+    fun find(value: T): TNode<T>?
 }

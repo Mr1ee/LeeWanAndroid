@@ -24,29 +24,39 @@ package com.lee.leewanandroid.algorithm.tree
 class BinarySearchTree<T : Comparable<T>> : Tree<T>(), ITreeAction<T> {
 
     /**
-     * 没有指针的二叉树删除太操蛋了，不干了！！~！~
+     * 二叉搜索树删除
      */
     override fun remove(value: T): Boolean {
-        var node = find(value)
+        val node = find(value)
         node?.let {
             if (it.left == null && it.right == null) {
-                node = null
+                it.parent?.right = null
                 return true
             } else if (it.left == null) {
-                node = it.right
+                if (it.parent?.value!! > it.value) {
+                    it.parent?.left = it.right as TNode<T>?
+                } else {
+                    it.parent?.right = it.right as TNode<T>?
+                }
             } else if (it.right == null) {
-                node = it.left
+                if (it.parent?.value!! > it.value) {
+                    it.parent?.left = it.left as TNode<T>?
+                } else {
+                    it.parent?.right = it.left as TNode<T>?
+                }
             } else {
                 //找到左子树的最大，或者右子树的最小节点
-                val rMin: Node<T> = findMin(checkNotNull(it.right))
+                val rMin: TNode<T> = findMin(checkNotNull(it.right as TNode<T>))
                 it.value = rMin.value
                 //kotlin 和java中没有指针，所以删除rMin就很操蛋了。
+                rMin.parent?.left = null
             }
         }
+
         return false
     }
 
-    fun findMin(p: Node<T>): Node<T> {
+    fun findMin(p: TNode<T>): TNode<T> {
         var parent: Node<T> = p
         while (parent.left != null) {
             parent.left?.let {
@@ -54,10 +64,10 @@ class BinarySearchTree<T : Comparable<T>> : Tree<T>(), ITreeAction<T> {
             }
         }
 
-        return parent
+        return parent as TNode<T>
     }
 
-    fun findMax(p: Node<T>): Node<T> {
+    fun findMax(p: TNode<T>): TNode<T> {
         var parent: Node<T> = p
         while (parent.right != null) {
             parent.right?.let {
@@ -65,17 +75,17 @@ class BinarySearchTree<T : Comparable<T>> : Tree<T>(), ITreeAction<T> {
             }
         }
 
-        return parent
+        return parent as TNode<T>
     }
 
-    override fun find(value: T): Node<T>? {
+    override fun find(value: T): TNode<T>? {
         var parent = root
         while (parent != null) {
             when {
                 value == parent.value -> {
-                    return parent
+                    return parent as TNode<T>
                 }
-                value > parent.value!! -> {
+                value > parent.value -> {
                     if (parent.right != null) {
                         parent = parent.right
                     } else {
@@ -97,7 +107,7 @@ class BinarySearchTree<T : Comparable<T>> : Tree<T>(), ITreeAction<T> {
 
     override fun insert(value: T): Boolean {
         if (root == null) {
-            root = Node(value)
+            root = TNode(value, null)
         } else {
             var parent = root
             while (parent != null) {
@@ -105,9 +115,9 @@ class BinarySearchTree<T : Comparable<T>> : Tree<T>(), ITreeAction<T> {
                     parent.value == value -> {
                         return false
                     }
-                    value > parent.value!! -> {
+                    value > parent.value -> {
                         if (parent.right == null) {
-                            parent.right = Node(value)
+                            parent.right = TNode(value, parent)
                             return true
                         } else {
                             parent = parent.right
@@ -115,7 +125,7 @@ class BinarySearchTree<T : Comparable<T>> : Tree<T>(), ITreeAction<T> {
                     }
                     else -> {
                         if (parent.left == null) {
-                            parent.left = Node(value)
+                            parent.left = TNode(value, parent)
                             return true
                         } else {
                             parent = parent.left
@@ -126,5 +136,4 @@ class BinarySearchTree<T : Comparable<T>> : Tree<T>(), ITreeAction<T> {
         }
         return false
     }
-
 }
