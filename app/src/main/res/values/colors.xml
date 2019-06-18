@@ -30,6 +30,7 @@
     <color name="popup_window_bg_press">@color/Grey300</color>
 
     <color name="red">#f44336</color>
+    <color name="line_divider_color">#f8f8f8</color>
     <color name="white">#FFFFFF</color>
     <color name="Grey50">#FAFAFA</color>
     <color name="Grey100">#F5F5F5</color>

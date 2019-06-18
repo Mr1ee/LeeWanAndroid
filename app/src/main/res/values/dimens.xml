@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <dimen name="dp_1">1dp</dimen>
     <dimen name="item_title_size">16sp</dimen>
     <dimen name="item_tv_content">14sp</dimen>
     <dimen name="item_tv_author">12sp</dimen>

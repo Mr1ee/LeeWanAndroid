@@ -1,5 +1,9 @@
 package com.lee.leewanandroid.algorithm.tree
 
-fun <T> addNode(parent: Node<T>, child: Node<T>) {
-    parent.left = child
+fun <T> Node<T>.isLeaf(): Boolean {
+    return this.left == null && this.right == null
+}
+
+fun <T> Node<T>.print() {
+    print(" " + this.value)
 }

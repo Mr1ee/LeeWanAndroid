@@ -10,7 +10,7 @@ package com.lee.leewanandroid.algorithm.tree
  * @UpdateRemark:
  * @Version:        1.0
  *
- *  in order [35 37 47 58 62 73 88 93 99]
+ *  in order [35 37 47 58 62 73 88 93 95 97 99 100]
  *              62
  *            /   \
  *          58     88
@@ -31,33 +31,58 @@ class BinarySearchTree<T : Comparable<T>> : Tree<T>(), ITreeAction<T> {
     override fun remove(value: T): Boolean {
         val node = find(value)
         node?.let {
-            if (it.isLeaf()) {
-                it.parent?.right = null
-                return true
-            } else if (it.left == null) {
-                if (it.parent?.value!! > it.value) {
-                    it.parent?.left = it.right as TNode<T>?
-                } else {
-                    it.parent?.right = it.right as TNode<T>?
+            when {
+                it.isLeaf() -> {
+                    it.parent?.let { p ->
+                        if (p.left == node) {
+                            p.left = null
+                        } else {
+                            p.right = null
+                        }
+                    } ?: this.root.apply { root = null }
+
+                    return true
                 }
-            } else if (it.right == null) {
-                if (it.parent?.value!! > it.value) {
-                    it.parent?.left = it.left as TNode<T>?
-                } else {
-                    it.parent?.right = it.left as TNode<T>?
+                it.left == null && it.right != null -> {
+                    it.parent?.let { p ->
+                        if (p.value > it.value) {
+                            p.left = it.right as TNode<T>?
+                        } else {
+                            p.right = it.right as TNode<T>?
+                        }
+                    } ?: root.apply { root = it.right }
+
+                    return true
                 }
-            } else {
-                //找到左子树的最大，或者右子树的最小节点
-                val lMax: TNode<T> = findMax(checkNotNull(it.left as TNode<T>))
-                it.value = lMax.value
-                //kotlin 和java中没有指针，所以删除rMin就很操蛋了。
-                lMax.parent?.right = lMax.left
+                it.right == null && it.left != null -> {
+                    it.parent?.let { p ->
+                        if (p.value > it.value) {
+                            p.left = it.left as TNode<T>?
+                        } else {
+                            p.right = it.left as TNode<T>?
+                        }
+                    } ?: root.apply { root = it.left }
+
+                    return true
+                }
+                else -> {
+                    //找到左子树的最大（后继节点），或者右子树的最小节点(前驱节点)
+                    val lMax: TNode<T> = findMax(it.left as TNode<T>)
+                    //交换该节点与后继节点的值，这个时候就相当于要删除 后继节点。
+                    it.value = lMax.value
+                    //kotlin 和java中没有指针，所以删除rMin就很操蛋了。
+                    // 删除后继节点，因为左子树的后继节点的右孩子一定是null，
+                    // 所以只需要考虑将后继节点的parent的右孩子节点指向改后继节点的左孩子即可
+                    lMax.parent?.right = lMax.left
+                    return true
+                }
             }
         }
 
         return false
     }
 
+    @Suppress("unused")
     fun findMin(p: TNode<T>): TNode<T> {
         var parent: Node<T> = p
         while (parent.left != null) {
@@ -137,9 +162,5 @@ class BinarySearchTree<T : Comparable<T>> : Tree<T>(), ITreeAction<T> {
             }
         }
         return false
-    }
-
-    private fun Node<T>.isLeaf(): Boolean {
-        return this.left == null && this.right == null
     }
 }

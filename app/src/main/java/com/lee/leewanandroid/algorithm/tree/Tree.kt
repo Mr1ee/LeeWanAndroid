@@ -12,6 +12,7 @@ import java.util.*
  * @UpdateRemark:
  * @Version:        1.0
  */
+@Suppress("unused")
 open class Tree<T> {
     /**
      * 层序遍历构建串 [A B C D E F G # # H I # J]
@@ -86,10 +87,12 @@ open class Tree<T> {
         }
     }
 
+    @Suppress("UNCHECKED_CAST")
     fun buildTree(preOrder: String?, inOrder: String?) {
         root = buildTreeInner(preOrder, inOrder) as Node<T>
     }
 
+    @Suppress("UNCHECKED_CAST")
     fun buildTree2(postOrder: String?, inOrder: String?) {
         root = buildTreeInner2(postOrder, inOrder) as Node<T>
     }
@@ -133,7 +136,7 @@ open class Tree<T> {
         queue.add(root)
         while (queue.isNotEmpty()) {
             val parent = queue.poll()
-            print(" " + parent.value)
+            root.print()
             parent.left?.let { queue.add(it) }
             parent.right?.let { queue.add(it) }
         }
@@ -144,7 +147,7 @@ open class Tree<T> {
      */
     fun preOrderTraverseR(root: Node<T>?) {
         root?.let {
-            print(" " + root.value)
+            root.print()
 
             root.left?.let {
                 preOrderTraverseR(it)
@@ -165,7 +168,7 @@ open class Tree<T> {
                 inOrderTraverseR(it)
             }
 
-            print(" " + root.value)
+            root.print()
 
             root.right?.let {
                 inOrderTraverseR(it)
@@ -185,11 +188,13 @@ open class Tree<T> {
             root.right?.let {
                 postOrderTraverseR(it)
             }
-
-            print(" " + root.value)
+            root.print()
         }
     }
 
+    /**
+     * 前序遍历（中-->左->右） 非递归实现
+     */
     fun preOrderTraverse(root: Node<T>) {
         val stack: Stack<Pair<Boolean, Node<T>>> = Stack()
         stack.push(Pair(false, root))
@@ -198,7 +203,7 @@ open class Tree<T> {
             val visited = pair.first
             val parent = pair.second
             if (visited) {
-                print(" " + parent.value)
+                parent.print()
             } else {
                 parent.right?.let {
                     stack.push(Pair(false, it))
@@ -211,6 +216,9 @@ open class Tree<T> {
         }
     }
 
+    /**
+     * 中序遍历（左-->中->右） 非递归实现
+     */
     fun inOrderTraverse(root: Node<T>) {
         val stack: Stack<Pair<Boolean, Node<T>>> = Stack()
         stack.push(Pair(false, root))
@@ -219,7 +227,7 @@ open class Tree<T> {
             val visited = pair.first
             val parent = pair.second
             if (visited) {
-                print(" " + parent.value)
+                parent.print()
             } else {
                 parent.right?.let {
                     stack.push(Pair(false, it))
@@ -232,6 +240,9 @@ open class Tree<T> {
         }
     }
 
+    /**
+     * 后序遍历（左-->右->中） 非递归实现
+     */
     fun postOrderTraverse(root: Node<T>) {
         val stack: Stack<Pair<Boolean, Node<T>>> = Stack()
         stack.push(Pair(false, root))
@@ -240,7 +251,7 @@ open class Tree<T> {
             val visited = pair.first
             val parent = pair.second
             if (visited) {
-                print(" " + parent.value)
+                parent.print()
             } else {
                 stack.push(Pair(true, parent))
                 parent.right?.let {
