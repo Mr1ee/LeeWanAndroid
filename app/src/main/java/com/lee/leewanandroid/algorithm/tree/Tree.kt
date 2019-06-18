@@ -263,4 +263,22 @@ open class Tree<T> {
             }
         }
     }
+
+    fun Node<T>.height(): Int {
+        var l = 0
+        var r = 0
+        this.left?.let {
+            l = it.height()
+        }
+
+        this.right?.let {
+            r = it.height()
+        }
+
+        return if (l > r) {
+            l + 1
+        } else {
+            r + 1
+        }
+    }
 }

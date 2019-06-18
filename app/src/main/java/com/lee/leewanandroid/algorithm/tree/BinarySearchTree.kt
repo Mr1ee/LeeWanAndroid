@@ -23,7 +23,7 @@ package com.lee.leewanandroid.algorithm.tree
  *                   /
  *                  95
  */
-class BinarySearchTree<T : Comparable<T>> : Tree<T>(), ITreeAction<T> {
+open class BinarySearchTree<T : Comparable<T>> : Tree<T>(), ITreeAction<T> {
 
     /**
      * 二叉搜索树删除
@@ -44,33 +44,18 @@ class BinarySearchTree<T : Comparable<T>> : Tree<T>(), ITreeAction<T> {
                     return true
                 }
                 it.left == null && it.right != null -> {
-                    it.parent?.let { p ->
-                        if (p.value > it.value) {
-                            p.left = it.right as TNode<T>?
-                        } else {
-                            p.right = it.right as TNode<T>?
-                        }
-                    } ?: root.apply { root = it.right }
-
+                    deleteNode(delNode = node, child = it.right as TNode<T>)
                     return true
                 }
                 it.right == null && it.left != null -> {
-                    it.parent?.let { p ->
-                        if (p.value > it.value) {
-                            p.left = it.left as TNode<T>?
-                        } else {
-                            p.right = it.left as TNode<T>?
-                        }
-                    } ?: root.apply { root = it.left }
-
+                    deleteNode(delNode = node, child = it.left as TNode<T>)
                     return true
                 }
                 else -> {
                     //找到左子树的最大（后继节点），或者右子树的最小节点(前驱节点)
-                    val lMax: TNode<T> = findMax(it.left as TNode<T>)
+                    val lMax: TNode<T> = maximum(it.left as TNode<T>)
                     //交换该节点与后继节点的值，这个时候就相当于要删除 后继节点。
                     it.value = lMax.value
-                    //kotlin 和java中没有指针，所以删除rMin就很操蛋了。
                     // 删除后继节点，因为左子树的后继节点的右孩子一定是null，
                     // 所以只需要考虑将后继节点的parent的右孩子节点指向改后继节点的左孩子即可
                     lMax.parent?.right = lMax.left
@@ -82,8 +67,21 @@ class BinarySearchTree<T : Comparable<T>> : Tree<T>(), ITreeAction<T> {
         return false
     }
 
+    /**
+     * 删除[delNode]节点
+     */
+    private fun deleteNode(delNode: TNode<T>, child: TNode<T>) {
+        delNode.parent?.let { p ->
+            if (p.value > delNode.value) {
+                p.left = child
+            } else {
+                p.right = child
+            }
+        } ?: root.apply { root = child }
+    }
+
     @Suppress("unused")
-    fun findMin(p: TNode<T>): TNode<T> {
+    fun minimum(p: TNode<T>): TNode<T> {
         var parent: Node<T> = p
         while (parent.left != null) {
             parent.left?.let {
@@ -94,7 +92,7 @@ class BinarySearchTree<T : Comparable<T>> : Tree<T>(), ITreeAction<T> {
         return parent as TNode<T>
     }
 
-    fun findMax(p: TNode<T>): TNode<T> {
+    fun maximum(p: TNode<T>): TNode<T> {
         var parent: Node<T> = p
         while (parent.right != null) {
             parent.right?.let {
@@ -133,27 +131,33 @@ class BinarySearchTree<T : Comparable<T>> : Tree<T>(), ITreeAction<T> {
     }
 
     override fun insert(value: T): Boolean {
+        val node = insertInternal(value)
+        return node == null
+    }
+
+    fun insertInternal(value: T): TNode<T>? {
         if (root == null) {
             root = TNode(value, null)
+            return root as TNode<T>
         } else {
             var parent = root
             while (parent != null) {
                 when {
                     parent.value == value -> {
-                        return false
+                        return null
                     }
                     value > parent.value -> {
                         if (parent.right == null) {
-                            parent.right = TNode(value, parent)
-                            return true
+                            parent.right = TNode(value, parent as TNode<T>?)
+                            return parent
                         } else {
                             parent = parent.right
                         }
                     }
                     else -> {
                         if (parent.left == null) {
-                            parent.left = TNode(value, parent)
-                            return true
+                            parent.left = TNode(value, parent as TNode<T>?)
+                            return parent
                         } else {
                             parent = parent.left
                         }
@@ -161,6 +165,6 @@ class BinarySearchTree<T : Comparable<T>> : Tree<T>(), ITreeAction<T> {
                 }
             }
         }
-        return false
+        return null
     }
 }
