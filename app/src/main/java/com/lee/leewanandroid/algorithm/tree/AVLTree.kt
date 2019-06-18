@@ -23,21 +23,53 @@ package com.lee.leewanandroid.algorithm.tree
  *
  *
  */
-class AVLTree<T : Comparable<T>> : BinarySearchTree<T>() {
+class AVLTree : BinarySearchTree<Int>() {
 
-    override fun insert(value: T): Boolean {
+    override fun insert(value: Int): Boolean {
         val insertP = insertInternal(value)
-
+        println("after insert $value, parent's value = ${insertP?.value}")
+        printTree()
         rebuild(insertP)
+        println("after rebuild tree")
+        printTree()
         return insertP == null
     }
 
-    private fun rebuild(insertP: TNode<T>?) {
+    private fun rebuild(insertP: TNode<Int>?) {
         //https://www.cnblogs.com/qm-article/p/9349681.html
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        var p = insertP
+        while (p != null) {
+            val lh = p.left.height()
+            val rh = p.right.height()
+            val bf = lh- rh
+            if (bf == 2) {
+                rebuildAfterInsert(p, true)
+            } else if (bf == -2) {
+                rebuildAfterInsert(p, false)
+            }
+            p = p.parent
+        }
     }
 
-    override fun remove(value: T): Boolean {
+    private fun rebuildAfterInsert(p: TNode<Int>, left: Boolean) {
+        if (left) {
+            val lChild = p.left
+            if (lChild?.left != null) { //右旋
+                rightRotation(p)
+            } else if (lChild?.right != null) {
+                leftRightRotation(p)
+            }
+        } else {
+            val rChild = p.right
+            if (rChild?.right != null) { //左旋
+                leftRotation(p)
+            } else if (rChild?.left != null) {
+                rightLeftRotation(p)
+            }
+        }
+    }
+
+    override fun remove(value: Int): Boolean {
         return super.remove(value)
     }
 
@@ -50,18 +82,26 @@ class AVLTree<T : Comparable<T>> : BinarySearchTree<T>() {
      *        C
      * 左旋
      */
-    private fun leftRotation(node: AVLNode<T>): AVLNode<T> {
-        val rChild = node.right as AVLNode<T>
+    private fun leftRotation(node: TNode<Int>): TNode<Int> {
+        val rChild = node.right as TNode<Int>
         if (node.parent != null) {
             node.parent?.let { p ->
                 p.right = rChild
+                rChild.parent = p
+
                 node.right = rChild.left
+                (rChild.left as TNode?)?.parent = node
+
                 rChild.left = node
+                node.parent = rChild
             }
         } else {
             //node 是root节点
             node.right = rChild.left
+            (rChild.left as TNode?)?.parent = node
+
             rChild.left = node
+            node.parent = rChild
         }
 
         return rChild
@@ -77,18 +117,26 @@ class AVLTree<T : Comparable<T>> : BinarySearchTree<T>() {
      *
      * 右旋
      */
-    private fun rightRotation(node: AVLNode<T>): AVLNode<T> {
-        val lChild = node.left as AVLNode<T>
+    private fun rightRotation(node: TNode<Int>): TNode<Int> {
+        val lChild = node.left as TNode<Int>
         if (node.parent != null) {
             node.parent?.let { p ->
                 p.left = lChild
+                lChild.parent = p
+
                 node.left = lChild.right
+                (lChild.left as TNode?)?.parent = node
+
                 lChild.right = node
+                node.parent = lChild
             }
         } else {
             //node 是root节点
             node.left = lChild.right
+            (lChild.left as TNode?)?.parent = node
+
             lChild.right = node
+            node.parent = lChild
         }
 
         return lChild
@@ -103,8 +151,8 @@ class AVLTree<T : Comparable<T>> : BinarySearchTree<T>() {
      *    C         B
      * 先左旋，再右旋
      */
-    private fun leftRightRotation(node: AVLNode<T>): AVLNode<T> {
-        leftRotation(node.left as AVLNode<T>)
+    private fun leftRightRotation(node: TNode<Int>): TNode<Int> {
+        leftRotation(node.left as TNode<Int>)
         return rightRotation(node)
     }
 
@@ -117,8 +165,8 @@ class AVLTree<T : Comparable<T>> : BinarySearchTree<T>() {
      *  C              B
      * 先右旋，再左旋
      */
-    private fun rightLeftRotation(node: AVLNode<T>): AVLNode<T> {
-        rightRotation(node.right as AVLNode<T>)
+    private fun rightLeftRotation(node: TNode<Int>): TNode<Int> {
+        rightRotation(node.right as TNode<Int>)
         return leftRotation(node)
     }
 }

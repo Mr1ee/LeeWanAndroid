@@ -1,5 +1,6 @@
 package com.lee.leewanandroid.algorithm;
 
+import com.lee.leewanandroid.algorithm.tree.AVLTree;
 import com.lee.leewanandroid.algorithm.tree.BinarySearchTree;
 import com.lee.leewanandroid.algorithm.tree.Node;
 import com.lee.leewanandroid.algorithm.tree.Tree;
@@ -78,7 +79,7 @@ public class AlgoMain {
 //        tree.postOrderTraverseR(tree.getRoot());
 //        System.out.println("\n\npost order");
 //        tree.postOrderTraverse(tree.getRoot());
-
+//
 //        System.out.println("\n");
 //        tree.buildTree(preOrderStr, inOrderStr);
 //        System.out.println("\n\npre order");
@@ -87,7 +88,7 @@ public class AlgoMain {
 //        tree.inOrderTraverse(tree.getRoot());
 //        System.out.println("\n\npost order");
 //        tree.postOrderTraverse(tree.getRoot());
-//
+
 //        System.out.println("\n");
 //        tree.buildTree2(postOrderStr, inOrderStr);
 //        System.out.println("\n\npre order");
@@ -96,34 +97,47 @@ public class AlgoMain {
 //        tree.inOrderTraverse(tree.getRoot());
 //        System.out.println("\n\npost order");
 //        tree.postOrderTraverse(tree.getRoot());
+//        tree.printTree();
+//
+//        BinarySearchTree<Integer> bst = new BinarySearchTree<>();
+//        bst.insert(62);
+//        bst.insert(58);
+//        bst.insert(47);
+//        bst.insert(35);
+//        bst.insert(51);
+//        bst.insert(37);
+//        bst.insert(88);
+//        bst.insert(73);
+//        bst.insert(99);
+//        bst.insert(93);
+//        bst.insert(97);
+//        bst.insert(95);
+//        bst.insert(100);
+//        System.out.println("\n\nbst pre order");
+//        bst.preOrderTraverse(bst.getRoot());
+//        System.out.println("\n\nbst in order");
+//        bst.inOrderTraverse(bst.getRoot());
+//        System.out.println("\n\nbst post order");
+//        bst.postOrderTraverse(bst.getRoot());
+//
+//        bst.remove(99);
+//        System.out.println("\n\nremove 99 pre order");
+//        bst.preOrderTraverse(bst.getRoot());
+//        System.out.println("\n\nremove 99 in order");
+//        bst.inOrderTraverse(bst.getRoot());
+//        System.out.println("\n\nremove 99 post order");
+//        bst.postOrderTraverse(bst.getRoot());
+//        bst.printTree();
 
-        BinarySearchTree<Integer> bst = new BinarySearchTree<>();
-        bst.insert(62);
-        bst.insert(58);
-        bst.insert(47);
-        bst.insert(35);
-        bst.insert(51);
-        bst.insert(37);
-        bst.insert(88);
-        bst.insert(73);
-        bst.insert(99);
-        bst.insert(93);
-        bst.insert(97);
-        bst.insert(95);
-        bst.insert(100);
-        System.out.println("\n\nbst pre order");
-        bst.preOrderTraverse(bst.getRoot());
-        System.out.println("\n\nbst in order");
-        bst.inOrderTraverse(bst.getRoot());
-        System.out.println("\n\nbst post order");
-        bst.postOrderTraverse(bst.getRoot());
-
-        bst.remove(99);
-        System.out.println("\n\nremove 99 pre order");
-        bst.preOrderTraverse(bst.getRoot());
-        System.out.println("\n\nremove 99 in order");
-        bst.inOrderTraverse(bst.getRoot());
-        System.out.println("\n\nremove 99 post order");
-        bst.postOrderTraverse(bst.getRoot());
+        AVLTree avlTree = new AVLTree();
+        avlTree.insert(63);
+        avlTree.insert(58);
+        avlTree.insert(88);
+        avlTree.insert(37);
+        avlTree.insert(73);
+        avlTree.insert(99);
+        avlTree.insert(93);
+        avlTree.insert(100);
+        avlTree.insert(51);
     }
 }
