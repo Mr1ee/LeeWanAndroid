@@ -23,55 +23,67 @@ class AVLTree1 : BinarySearchTree<Int>() {
     }
 
     /**
-     * T1, T2, T3 and T4 are subtrees.
-     *       z                                      y
-     *      / \                                   /   \
-     *     y  T4      Right Rotate (z)          x      z
-     *    / \          - - - - - - - - ->      /  \   /  \
-     *   x   T3                               T1  T2 T3  T4
-     *  / \
-     * T1  T2
+     *  [L-L] Left Left Case:
+     *        z                                      y
+     *       / \                                   /   \
+     *      y  T4       Right Rotate (z)          x      z
+     *     / \         - - - - - - - - ->       /  \   /  \
+     *    x   T3                               T1  T2 T3  T4
+     *   / \
+     *  T1  T2
      *
-     *
-     **/
-    // A utility function to right rotate subtree rooted with y
-    // See the diagram given above.
-    fun rightRotate(y: AVLNode<Int>): AVLNode<Int> {
-        val x = y.left as AVLNode
-        val t2 = x.right
+     *   T1, T2, T3 and T4 are subtrees.
+     *   A utility function to right rotate subtree rooted with nodeZ
+     *   See the diagram given above.
+     */
+    private fun rightRotate(nodeZ: AVLNode<Int>): AVLNode<Int> {
+        val nodeY = nodeZ.left as AVLNode
+        val t2 = nodeY.right
 
         // Perform rotation
-        x.right = y
-        y.left = t2
+        nodeY.right = nodeZ
+        nodeZ.left = t2
 
         // Update heights
-        y.h = max(heightAVL(y.left), heightAVL(y.right)) + 1
-        x.h = max(heightAVL(x.left), heightAVL(x.right)) + 1
+        nodeZ.h = max(heightAVL(nodeZ.left), heightAVL(nodeZ.right)) + 1
+        nodeY.h = max(heightAVL(nodeY.left), heightAVL(nodeY.right)) + 1
 
-        println("\n\nafter right rotation, node value = [${x.value}]")
-        printTree(x)
+        println("\n\nafter right rotation, node value = [${nodeY.value}]")
+        printTree(nodeY)
         // Return new root
-        return x
+        return nodeY
     }
 
-    // A utility function to left rotate subtree rooted with x
-    // See the diagram given above.
-    fun leftRotate(x: AVLNode<Int>): AVLNode<Int> {
-        val y = x.right as AVLNode
-        val t2 = y.left
+    /**
+     *  [R-R]: Right Right Case:
+     *      z                               y
+     *    /  \                            /  \
+     *   T1   y     Left Rotate(z)       z    x
+     *       / \   - - - - - - - ->    / \   / \
+     *      T2  x                     T1 T2 T3 T4
+     *         / \
+     *       T3  T4
+     *
+     *   T1, T2, T3 and T4 are subtrees.
+     *   A utility function to left rotate subtree rooted with nodeZ
+     *   See the diagram given above.
+     */
+    private fun leftRotate(nodeZ: AVLNode<Int>): AVLNode<Int> {
+        val nodeY = nodeZ.right as AVLNode
+        val t2 = nodeY.left
 
         // Perform rotation
-        y.left = x
-        x.right = t2
+        nodeY.left = nodeZ
+        nodeZ.right = t2
 
         //  Update heights
-        x.h = max(heightAVL(x.left), heightAVL(x.right)) + 1
-        y.h = max(heightAVL(y.left), heightAVL(y.right)) + 1
+        nodeZ.h = max(heightAVL(nodeZ.left), heightAVL(nodeZ.right)) + 1
+        nodeY.h = max(heightAVL(nodeY.left), heightAVL(nodeY.right)) + 1
 
-        println("\n\nafter left rotation, node value = [${y.value}]")
-        printTree(y)
+        println("\n\nafter left rotation, node value = [${nodeY.value}]")
+        printTree(nodeY)
         // Return new root
-        return y
+        return nodeY
     }
 
     override fun insert(value: Int): Boolean {
@@ -101,8 +113,8 @@ class AVLTree1 : BinarySearchTree<Int>() {
               unbalanced */
         val balance = getBalance(node)
 
-        // If this node becomes unbalanced, then there
-        // are 4 cases Left Left Case
+        // If this node becomes unbalanced, then there  are 4 cases
+        // Left Left Case
         (node.left as AVLNode?)?.let {
             if (balance > 1 && key < it.key)
                 return rightRotate(node)
@@ -114,7 +126,16 @@ class AVLTree1 : BinarySearchTree<Int>() {
                 return leftRotate(node)
         }
 
-        // Left Right Case
+        /**
+         *  [L-R] Left Right Case
+         *       z                              z                           x
+         *      / \                            / \                         /  \
+         *     y  T4    Left Rotate (y)       x  T4   Right Rotate(z)    y     z
+         *    / \      - - - - - - - - ->    / \      - - - - - - - ->  / \   / \
+         *   T1  x                          y   T3                    T1  T2 T3  T4
+         *      / \                        / \
+         *    T2  T3                     T1  T2
+         */
         (node.left as AVLNode?)?.let {
             if (balance > 1 && key > it.key) {
                 node.left = leftRotate(it)
@@ -122,7 +143,16 @@ class AVLTree1 : BinarySearchTree<Int>() {
             }
         }
 
-        // Right Left Case
+        /**
+         *  [R-L] Right Left Case
+         *      z                            z                            x
+         *     / \                          / \                          /  \
+         *   T1   y   Right Rotate (y)    T1   x      Left Rotate(z)   z     y
+         *       / \  - - - - - - - - ->     /  \   - - - - - - - ->  / \   / \
+         *      x  T4                       T2   y                  T1  T2 T3  T4
+         *     / \                              / \
+         *   T2   T3                           T3 T4
+         */
         (node.right as AVLNode?)?.let {
             if (balance < -1 && key < it.key) {
                 node.right = rightRotate(it)
