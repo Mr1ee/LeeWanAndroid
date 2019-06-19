@@ -295,12 +295,72 @@ open class Tree<T> {
      * H   I   #   J   #   #   #   #
      *
      */
-    @Suppress("UNCHECKED_CAST")
-    fun printTree() {
-        println()
-        val height = root.height()
+    fun printTree(r: Node<T> = this.root!!) {
+        val height = r.height()
         val fullNodesList = ArrayList<ArrayList<Node<T>>>()
-        fullNodesList.add(arrayListOf(root!!))
+        fillTree(fullNodesList, r, height)
+
+        val maxWidth = Math.pow(2.0, height.toDouble())
+        fullNodesList.forEachIndexed { index, it ->
+            if (index != fullNodesList.size - 1) {
+                val size = it.size
+                for (j in 0 until it.size) {
+                    printChar(" ", (maxWidth / size / 2 - 2).toInt())
+                    if (it[j].left!!.value != "#") {
+                        print("┌")
+                        printChar("─", (maxWidth / size / 2 - 3).toInt())
+                    } else {
+                        printChar(" ", (maxWidth / size / 2 - 2).toInt())
+                    }
+                    val t = it[j].value!!.toString()
+                    when {
+                        t == "#" -> print("   ")
+                        t.length == 1 -> print(" $t ")
+                        t.length == 2 -> print(" $t")
+                        else -> print(t)
+                    }
+
+                    if (it[j].right!!.value != "#") {
+                        printChar("─", (maxWidth / size / 2 - 3).toInt())
+                        print("┐")
+                    } else {
+                        printChar(" ", (maxWidth / size / 2 - 2).toInt())
+                    }
+                    printChar(" ", (maxWidth / size / 2 - 1).toInt())
+                }
+                println()
+            } else {
+                for (j in 0 until it.size) {
+                    val t = it[j].value!!.toString()
+                    when {
+                        t == "#" -> print("   ")
+                        t.length == 1 -> print(" $t ")
+                        t.length == 2 -> print(" $t")
+                        else -> print(t)
+                    }
+                    print(" ")
+                }
+                println()
+            }
+        }
+
+        deleteNull(r)
+    }
+
+    /**
+     * 填满整个树,null节点 用"#"填充
+     *
+     *   ┌── B ──┐       ┌── C ──┐
+     * ┌ D ┐   ┌ E ┐   ┌ F ┐   ┌ G ┐
+     * H   I   #   J   #   #   #   #
+     */
+    @Suppress("UNCHECKED_CAST")
+    private fun fillTree(
+        fullNodesList: ArrayList<ArrayList<Node<T>>>,
+        r: Node<T>,
+        height: Int
+    ) {
+        fullNodesList.add(arrayListOf(r))
         var i = 0
         while (i++ < height - 1) {
             val preNodes = fullNodesList[fullNodesList.size - 1]
@@ -329,52 +389,6 @@ open class Tree<T> {
             }
             fullNodesList.add(newRowNodes)
         }
-
-        val lastWidth = Math.pow(2.0, height.toDouble())
-        fullNodesList.forEachIndexed { index, it ->
-            if (index != fullNodesList.size - 1) {
-                val size = it.size
-                for (j in 0 until it.size) {
-                    printSpace(" ", (lastWidth / size / 2 - 2).toInt())
-                    if (it[j].left!!.value != "#") {
-                        print("┌")
-                        printSpace("─", (lastWidth / size / 2 - 3).toInt())
-                    } else {
-                        printSpace(" ", (lastWidth / size / 2 - 2).toInt())
-                    }
-                    val t = it[j].value!!.toString()
-                    when {
-                        t == "#" -> print("   ")
-                        t.length == 1 -> print(" $t ")
-                        t.length == 2 -> print(" $t")
-                        else -> print(t)
-                    }
-
-                    if (it[j].right!!.value != "#") {
-                        printSpace("─", (lastWidth / size / 2 - 3).toInt())
-                        print("┐")
-                    } else {
-                        printSpace(" ", (lastWidth / size / 2 - 2).toInt())
-                    }
-                    printSpace(" ", (lastWidth / size / 2 - 1).toInt())
-                }
-                println()
-            } else {
-                for (j in 0 until it.size) {
-                    val t = it[j].value!!.toString()
-                    when {
-                        t == "#" -> print("   ")
-                        t.length == 1 -> print(" $t ")
-                        t.length == 2 -> print(" $t")
-                        else -> print(t)
-                    }
-                    print(" ")
-                }
-                println()
-            }
-        }
-
-        deleteNull(root)
     }
 
     /**
@@ -400,35 +414,9 @@ open class Tree<T> {
         }
     }
 
-    private fun printSpace(s: String, n: Int) {
+    private fun printChar(s: String, n: Int) {
         for (i in 0..n) {
             print(s)
         }
-    }
-
-    private fun fillTree() {
-
-    }
-
-    /**
-     *    ┌───381────┐
-     *    │          │
-     * ┌─12─┐     ┌─410─┐
-     * │    │     │     │
-     * 9  ┌─40─┐ 394 ┌─540─┐
-     *    │    │     │     │
-     *    35 ┌─190 ┌─476 ┌─760─┐
-     *       │     │     │     │
-     *      146   445   600   800
-     */
-
-    private fun Int.bit(): Int {
-        var v = this
-        var b = 1
-        while (v / 10 > 0) {
-            b++
-            v /= 10
-        }
-        return b
     }
 }

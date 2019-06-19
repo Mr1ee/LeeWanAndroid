@@ -1,6 +1,7 @@
 package com.lee.leewanandroid.algorithm;
 
 import com.lee.leewanandroid.algorithm.tree.AVLTree;
+import com.lee.leewanandroid.algorithm.tree.AVLTree1;
 import com.lee.leewanandroid.algorithm.tree.BinarySearchTree;
 import com.lee.leewanandroid.algorithm.tree.Node;
 import com.lee.leewanandroid.algorithm.tree.Tree;
@@ -129,6 +130,7 @@ public class AlgoMain {
 //        bst.postOrderTraverse(bst.getRoot());
 //        bst.printTree();
 
+//        AVLTree1 avlTree = new AVLTree1();
         AVLTree avlTree = new AVLTree();
         avlTree.insert(63);
         avlTree.insert(58);
@@ -139,5 +141,18 @@ public class AlgoMain {
         avlTree.insert(93);
         avlTree.insert(100);
         avlTree.insert(51);
+        avlTree.insert(30);
+        avlTree.insert(27);
+        avlTree.insert(25);
+        avlTree.insert(23);
+        avlTree.insert(21);
+        avlTree.insert(19);
+        avlTree.insert(17);
+        avlTree.insert(18);
+        avlTree.insert(15);
+        avlTree.insert(16);
+        avlTree.insert(13);
+        avlTree.insert(11);
+        avlTree.insert(9);
     }
 }

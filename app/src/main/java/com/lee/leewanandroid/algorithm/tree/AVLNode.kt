@@ -10,6 +10,4 @@ package com.lee.leewanandroid.algorithm.tree
  * @UpdateRemark:
  * @Version:        1.0
  */
-class AVLNode<T>(value: T, parent: TNode<T>?) : TNode<T>(value, parent) {
-    var height: Int = 0
-}
+class AVLNode<T>(var key: T, var h: Int = 1) : Node<T>(key)
