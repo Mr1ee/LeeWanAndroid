@@ -130,8 +130,8 @@ public class AlgoMain {
 //        bst.postOrderTraverse(bst.getRoot());
 //        bst.printTree();
 
-//        AVLTree1 avlTree = new AVLTree1();
-        AVLTree avlTree = new AVLTree();
+        AVLTree1 avlTree = new AVLTree1();
+//        AVLTree avlTree = new AVLTree();
         avlTree.insert(63);
         avlTree.insert(58);
         avlTree.insert(88);

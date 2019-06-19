@@ -87,20 +87,20 @@ class AVLTree1 : BinarySearchTree<Int>() {
     }
 
     override fun insert(value: Int): Boolean {
-        root = insert(root as AVLNode<Int>?, value)
+        root = insertInternal(root as AVLNode<Int>?, value)
         println("\n\nafter insert [$value], root value = [${root?.value}]")
         printTree()
         return find(value) == null
     }
 
-    private fun insert(node: AVLNode<Int>?, key: Int): AVLNode<Int> {
+    private fun insertInternal(node: AVLNode<Int>?, key: Int): AVLNode<Int> {
         /* 1.  Perform the normal BST insertion */
         if (node == null)
             return AVLNode(key)
 
         when {
-            key < node.key -> node.left = insert(node.left as AVLNode<Int>?, key)
-            key > node.key -> node.right = insert(node.right as AVLNode<Int>?, key)
+            key < node.key -> node.left = insertInternal(node.left as AVLNode<Int>?, key)
+            key > node.key -> node.right = insertInternal(node.right as AVLNode<Int>?, key)
             else // Duplicate keys not allowed
             -> return node
         }

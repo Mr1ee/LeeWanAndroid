@@ -29,7 +29,7 @@ open class BinarySearchTree<T : Comparable<T>> : Tree<T>(), ITreeAction<T> {
      * 二叉搜索树删除
      */
     override fun remove(value: T): Boolean {
-        val node = find(value)
+        val node = find(value) as TNode?
         node?.let {
             when {
                 it.isLeaf() -> {
@@ -80,6 +80,9 @@ open class BinarySearchTree<T : Comparable<T>> : Tree<T>(), ITreeAction<T> {
         } ?: root.apply { root = child }
     }
 
+    /**
+     * find 后继节点
+     */
     @Suppress("unused")
     fun minimum(p: TNode<T>): TNode<T> {
         var parent: Node<T> = p
@@ -92,6 +95,9 @@ open class BinarySearchTree<T : Comparable<T>> : Tree<T>(), ITreeAction<T> {
         return parent as TNode<T>
     }
 
+    /**
+     * find 前驱节点
+     */
     fun maximum(p: TNode<T>): TNode<T> {
         var parent: Node<T> = p
         while (parent.right != null) {
@@ -103,12 +109,12 @@ open class BinarySearchTree<T : Comparable<T>> : Tree<T>(), ITreeAction<T> {
         return parent as TNode<T>
     }
 
-    override fun find(value: T): TNode<T>? {
+    override fun find(value: T): Node<T>? {
         var parent = root
         while (parent != null) {
             when {
                 value == parent.value -> {
-                    return parent as TNode<T>
+                    return parent
                 }
                 value > parent.value -> {
                     if (parent.right != null) {
