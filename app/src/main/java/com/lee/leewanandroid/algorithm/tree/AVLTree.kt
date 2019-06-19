@@ -2,7 +2,7 @@ package com.lee.leewanandroid.algorithm.tree
 
 /**
  *
- * @Description:    AVLTree 平衡二叉树
+ * @Description:    AVLTree 平衡二叉树 插入删除的非递归实现版本
  * @Author:         lihuayong
  * @CreateDate:     2019-06-18 14:23
  * @UpdateUser:
@@ -19,14 +19,13 @@ package com.lee.leewanandroid.algorithm.tree
  *          \        / \
  *         51      93 100
  *
- *
- *
- *
  */
+@Suppress("KDocUnresolvedReference")
 class AVLTree : BinarySearchTree<Int>() {
 
     override fun insert(value: Int): Boolean {
         val insertP = insertInternal(value)
+        heightR(root)
         println("after insert $value, parent's value = ${insertP?.value}")
         printTree()
         rebuild(insertP)
@@ -40,9 +39,9 @@ class AVLTree : BinarySearchTree<Int>() {
             val lh = p.left.height()
             val rh = p.right.height()
             val bf = lh - rh
-            if (bf == 2) {
+            if (bf >= 2) {
                 rebuildAfterInsert(p, true)
-            } else if (bf == -2) {
+            } else if (bf <= -2) {
                 rebuildAfterInsert(p, false)
             }
             p = p.parent
@@ -68,7 +67,12 @@ class AVLTree : BinarySearchTree<Int>() {
     }
 
     override fun remove(value: Int): Boolean {
-        return super.remove(value)
+        val removeP = removeInternal(value)
+        heightR(root)
+        println("after remove $value, parent's value = ${removeP?.value}")
+        printTree()
+        rebuild(removeP)
+        return removeP == null
     }
 
     /**
@@ -104,6 +108,7 @@ class AVLTree : BinarySearchTree<Int>() {
         nodeA.right = nodeT
         nodeT?.parent = nodeA
 
+        heightR(root)
         println("\n\nafter left rotation, nodeA value = [${nodeA.value}]")
         printTree()
         return nodeB
@@ -142,6 +147,7 @@ class AVLTree : BinarySearchTree<Int>() {
         nodeA.left = nodeT
         nodeT?.parent = nodeA
 
+        heightR(root)
         println("\n\nafter right rotation, nodeA value = [${nodeA.value}]")
         printTree()
         return nodeB

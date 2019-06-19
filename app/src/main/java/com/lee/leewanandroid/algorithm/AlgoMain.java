@@ -8,6 +8,7 @@ import com.lee.leewanandroid.algorithm.tree.Tree;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Scanner;
 
 public class AlgoMain {
 
@@ -130,6 +131,7 @@ public class AlgoMain {
 //        bst.postOrderTraverse(bst.getRoot());
 //        bst.printTree();
 
+        long sTime = System.currentTimeMillis();
         AVLTree1 avlTree = new AVLTree1();
 //        AVLTree avlTree = new AVLTree();
         avlTree.insert(63);
@@ -154,5 +156,28 @@ public class AlgoMain {
         avlTree.insert(13);
         avlTree.insert(11);
         avlTree.insert(9);
+        avlTree.insert(75);
+        avlTree.insert(74);
+        avlTree.remove(21);
+        avlTree.remove(25);
+        avlTree.remove(27);
+        avlTree.remove(23);
+        avlTree.remove(15);
+        avlTree.remove(58);
+        long endTime = System.currentTimeMillis();
+        System.out.println("time cost = " + (endTime - sTime));
+
+        Scanner input = new Scanner(System.in);
+        String cmd;
+        int key;
+        while (!(cmd = input.nextLine()).equals("quit")) {
+            if ("i".equalsIgnoreCase(cmd)) {
+                key = input.nextInt();
+                avlTree.insert(key);
+            } else if ("r".equalsIgnoreCase(cmd)) {
+                key = input.nextInt();
+                avlTree.remove(key);
+            }
+        }
     }
 }

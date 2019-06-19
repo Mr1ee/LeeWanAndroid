@@ -265,18 +265,27 @@ open class Tree<T> {
         }
     }
 
-    fun Node<T>?.height(): Int {
-        if (this == null) {
+    /**
+     * calculate all node's height
+     */
+    fun heightR(node: Node<Int>?): Int {
+        if (node == null) {
             return 0
         }
         var l: Int
         var r: Int
-        this.left.let {
-            l = it.height()
+        node.left.let {
+            l = heightR(it)
         }
 
-        this.right.let {
-            r = it.height()
+        node.right.let {
+            r = heightR(it)
+        }
+
+        node.height = if (l > r) {
+            l + 1
+        } else {
+            r + 1
         }
 
         return if (l > r) {
@@ -287,13 +296,12 @@ open class Tree<T> {
     }
 
     /**
-     *
+     *  print tree
      *               ┌────────────── #
      *       ┌────── A ──────┐
      *   ┌── B ──┐       ┌── C ──┐
      * ┌ D ┐   ┌ E ┐   ┌ F ┐   ┌ G ┐
      * H   I   #   J   #   #   #   #
-     *
      */
     fun printTree(r: Node<T> = this.root!!) {
         val height = r.height()
@@ -348,7 +356,7 @@ open class Tree<T> {
     }
 
     /**
-     * 填满整个树,null节点 用"#"填充
+     * full fill tree, replace null node with "#" node
      *
      *   ┌── B ──┐       ┌── C ──┐
      * ┌ D ┐   ┌ E ┐   ┌ F ┐   ┌ G ┐
@@ -392,7 +400,7 @@ open class Tree<T> {
     }
 
     /**
-     * 删除辅助的"#"孩子结点
+     * delete all the "#" node
      */
     private fun deleteNull(node: Node<T>?) {
         node?.let {
@@ -414,6 +422,9 @@ open class Tree<T> {
         }
     }
 
+    /**
+     * print [s] for [n] times
+     */
     private fun printChar(s: String, n: Int) {
         for (i in 0..n) {
             print(s)

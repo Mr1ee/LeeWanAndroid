@@ -2,7 +2,7 @@ package com.lee.leewanandroid.algorithm.tree
 
 /**
  *
- * @Description:    AVLTree1
+ * @Description:    AVLTree1 插入删除的递归实现版本
  * @Author:         lihuayong
  * @CreateDate:     2019-06-19 15:00
  * @UpdateUser:
@@ -12,13 +12,8 @@ package com.lee.leewanandroid.algorithm.tree
  */
 class AVLTree1 : BinarySearchTree<Int>() {
 
-    // A utility function to get the height of the tree
-    private fun heightAVL(node: Node<Int>?): Int {
-        return (node as AVLNode?)?.h ?: 0
-    }
-
     // A utility function to get maximum of two integers
-    fun max(a: Int, b: Int): Int {
+    private fun max(a: Int, b: Int): Int {
         return if (a > b) a else b
     }
 
@@ -36,8 +31,8 @@ class AVLTree1 : BinarySearchTree<Int>() {
      *   A utility function to right rotate subtree rooted with nodeZ
      *   See the diagram given above.
      */
-    private fun rightRotate(nodeZ: AVLNode<Int>): AVLNode<Int> {
-        val nodeY = nodeZ.left as AVLNode
+    private fun rightRotate(nodeZ: Node<Int>): Node<Int> {
+        val nodeY = nodeZ.left as Node
         val t2 = nodeY.right
 
         // Perform rotation
@@ -45,8 +40,8 @@ class AVLTree1 : BinarySearchTree<Int>() {
         nodeZ.left = t2
 
         // Update heights
-        nodeZ.h = max(heightAVL(nodeZ.left), heightAVL(nodeZ.right)) + 1
-        nodeY.h = max(heightAVL(nodeY.left), heightAVL(nodeY.right)) + 1
+        nodeZ.height = max(nodeZ.left.height(), nodeZ.right.height()) + 1
+        nodeY.height = max(nodeY.left.height(), nodeY.right.height()) + 1
 
         println("\n\nafter right rotation, node value = [${nodeY.value}]")
         printTree(nodeY)
@@ -68,8 +63,8 @@ class AVLTree1 : BinarySearchTree<Int>() {
      *   A utility function to left rotate subtree rooted with nodeZ
      *   See the diagram given above.
      */
-    private fun leftRotate(nodeZ: AVLNode<Int>): AVLNode<Int> {
-        val nodeY = nodeZ.right as AVLNode
+    private fun leftRotate(nodeZ: Node<Int>): Node<Int> {
+        val nodeY = nodeZ.right as Node
         val t2 = nodeY.left
 
         // Perform rotation
@@ -77,8 +72,8 @@ class AVLTree1 : BinarySearchTree<Int>() {
         nodeZ.right = t2
 
         //  Update heights
-        nodeZ.h = max(heightAVL(nodeZ.left), heightAVL(nodeZ.right)) + 1
-        nodeY.h = max(heightAVL(nodeY.left), heightAVL(nodeY.right)) + 1
+        nodeZ.height = max(nodeZ.left.height(), nodeZ.right.height()) + 1
+        nodeY.height = max(nodeY.left.height(), nodeY.right.height()) + 1
 
         println("\n\nafter left rotation, node value = [${nodeY.value}]")
         printTree(nodeY)
@@ -87,42 +82,92 @@ class AVLTree1 : BinarySearchTree<Int>() {
     }
 
     override fun insert(value: Int): Boolean {
-        root = insertInternal(root as AVLNode<Int>?, value)
+        root = insertInternal(root, value)
         println("\n\nafter insert [$value], root value = [${root?.value}]")
         printTree()
         return find(value) == null
     }
 
-    private fun insertInternal(node: AVLNode<Int>?, key: Int): AVLNode<Int> {
+    private fun insertInternal(node: Node<Int>?, key: Int): Node<Int> {
         /* 1.  Perform the normal BST insertion */
         if (node == null)
-            return AVLNode(key)
+            return Node(key)
 
+        //BST insert
         when {
-            key < node.key -> node.left = insertInternal(node.left as AVLNode<Int>?, key)
-            key > node.key -> node.right = insertInternal(node.right as AVLNode<Int>?, key)
+            key < node.value -> node.left = insertInternal(node.left, key)
+            key > node.value -> node.right = insertInternal(node.right, key)
             else // Duplicate keys not allowed
             -> return node
         }
 
+        return rebuildTree(node)
+    }
+
+    override fun remove(value: Int): Boolean {
+        if (find(value) != null) {
+            root = removeInternal(root, value)
+            println("\n\nafter remove [$value], root value = [${root?.value}]")
+            printTree()
+            return true
+        }
+        return false
+    }
+
+    private fun removeInternal(node: Node<Int>?, key: Int): Node<Int>? {
+        if (node == null) {
+            return null
+        }
+
+        //BST remove
+        when {
+            key < node.value -> node.left = removeInternal(node.left, key)
+            key > node.value -> node.right = removeInternal(node.right, key)
+            else -> when {
+                node.isLeaf() -> {
+                    return null
+                }
+                node.noLeftChild() -> {
+                    return node.right
+                }
+                node.noRightChild() -> {
+                    return node.left
+                }
+                else -> {
+                    //待删除结点左右孩子结点均不为null，这个时候可以去找待删除结点的后继节点，或者前驱结点，
+                    //根据二叉排序树的定义后继节点就是左子树的最大节点，前驱结点就是右子树的最小节点
+                    //找到前驱结点, 交换前驱结点与node的值,然后删除前驱结点
+                    val predecessorNode = predecessor(node)
+                    removeInternal(node, predecessorNode.value)
+                    //将前驱结点的值交给node
+                    node.value = predecessorNode.value
+                    return node
+                }
+            }
+        }
+
+        return rebuildTree(node)
+    }
+
+    private fun rebuildTree(node: Node<Int>): Node<Int> {
         /* 2. Update height of this ancestor node */
-        node.h = 1 + max(heightAVL(node.left), heightAVL(node.right))
+        node.height = 1 + max(node.left.height(), node.right.height())
 
         /* 3. Get the balance factor of this ancestor
               node to check whether this node became
               unbalanced */
-        val balance = getBalance(node)
+        val balance = node.balance()
 
         // If this node becomes unbalanced, then there  are 4 cases
         // Left Left Case
-        (node.left as AVLNode?)?.let {
-            if (balance > 1 && key < it.key)
+        node.left?.let {
+            if (balance > 1 && it.left != null)
                 return rightRotate(node)
         }
 
         // Right Right Case
-        (node.right as AVLNode?)?.let {
-            if (balance < -1 && key > it.key)
+        node.right?.let {
+            if (balance < -1 && it.right != null)
                 return leftRotate(node)
         }
 
@@ -136,8 +181,8 @@ class AVLTree1 : BinarySearchTree<Int>() {
          *      / \                        / \
          *    T2  T3                     T1  T2
          */
-        (node.left as AVLNode?)?.let {
-            if (balance > 1 && key > it.key) {
+        node.left?.let {
+            if (balance > 1 && it.right != null) {
                 node.left = leftRotate(it)
                 return rightRotate(node)
             }
@@ -153,8 +198,8 @@ class AVLTree1 : BinarySearchTree<Int>() {
          *     / \                              / \
          *   T2   T3                           T3 T4
          */
-        (node.right as AVLNode?)?.let {
-            if (balance < -1 && key < it.key) {
+        node.right?.let {
+            if (balance < -1 && it.left != null) {
                 node.right = rightRotate(it)
                 return leftRotate(node)
             }
@@ -162,10 +207,5 @@ class AVLTree1 : BinarySearchTree<Int>() {
 
         /* return the (unchanged) node pointer */
         return node
-    }
-
-    // Get Balance factor of node node
-    private fun getBalance(node: AVLNode<Int>?): Int {
-        return if (node == null) 0 else heightAVL(node.left) - heightAVL(node.right)
     }
 }

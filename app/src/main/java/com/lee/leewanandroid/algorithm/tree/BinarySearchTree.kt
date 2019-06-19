@@ -43,22 +43,19 @@ open class BinarySearchTree<T : Comparable<T>> : Tree<T>(), ITreeAction<T> {
 
                     return true
                 }
-                it.left == null && it.right != null -> {
+                it.noLeftChild() -> {
                     deleteNode(delNode = node, child = it.right as TNode<T>)
                     return true
                 }
-                it.right == null && it.left != null -> {
+                it.noRightChild() -> {
                     deleteNode(delNode = node, child = it.left as TNode<T>)
                     return true
                 }
                 else -> {
                     //找到左子树的最大（后继节点），或者右子树的最小节点(前驱节点)
-                    val lMax: TNode<T> = maximum(it.left as TNode<T>)
+                    val lMax: TNode<T> = successor(it) as TNode<T>
                     //交换该节点与后继节点的值，这个时候就相当于要删除 后继节点。
                     it.value = lMax.value
-                    // 删除后继节点，因为左子树的后继节点的右孩子一定是null，
-                    // 所以只需要考虑将后继节点的parent的右孩子节点指向改后继节点的左孩子即可
-                    lMax.parent?.right = lMax.left
                     return true
                 }
             }
@@ -84,29 +81,39 @@ open class BinarySearchTree<T : Comparable<T>> : Tree<T>(), ITreeAction<T> {
      * find 后继节点
      */
     @Suppress("unused")
-    fun minimum(p: TNode<T>): TNode<T> {
-        var parent: Node<T> = p
-        while (parent.left != null) {
-            parent.left?.let {
-                parent = it
-            }
+    fun successor(node: Node<T>): Node<T> {
+        var p = node
+        var child = node.left!!
+        while (child.right != null) {
+            p = child
+            child = child.right!!
         }
-
-        return parent as TNode<T>
+        //删除前驱结点
+        if (p == node) {
+            node.left = child.left
+        } else {
+            p.right = child.left
+        }
+        return child
     }
 
     /**
      * find 前驱节点
      */
-    fun maximum(p: TNode<T>): TNode<T> {
-        var parent: Node<T> = p
-        while (parent.right != null) {
-            parent.right?.let {
-                parent = it
-            }
+    fun predecessor(node: Node<T>): Node<T> {
+        var p = node
+        var child = node.right!!
+        while (child.left != null) {
+            p = child
+            child = child.left!!
         }
-
-        return parent as TNode<T>
+        //删除前驱结点
+        if (p == node) {
+            node.right = child.right
+        } else {
+            p.left = child.right
+        }
+        return child
     }
 
     override fun find(value: T): Node<T>? {
@@ -168,6 +175,44 @@ open class BinarySearchTree<T : Comparable<T>> : Tree<T>(), ITreeAction<T> {
                             parent = parent.left
                         }
                     }
+                }
+            }
+        }
+        return null
+    }
+
+    fun removeInternal(value: T): TNode<T>? {
+        val node = find(value) as TNode?
+        node?.let {
+            when {
+                it.isLeaf() -> {
+                    it.parent?.let { p ->
+                        if (p.left == node) {
+                            p.left = null
+                        } else {
+                            p.right = null
+                        }
+                    } ?: return null
+
+                    return node.parent
+                }
+                it.noLeftChild() -> {
+                    val predecessorNode: TNode<T> = predecessor(it) as TNode<T>
+                    it.value = predecessorNode.value
+                    return predecessorNode.parent
+                }
+                it.noRightChild() -> {
+                    val successorNode: TNode<T> = successor(it) as TNode<T>
+                    it.value = successorNode.value
+                    return successorNode.parent
+                }
+                else -> {
+                    //找到左子树的最大（后继节点），或者右子树的最小节点(前驱节点)
+                    val predecessorNode: TNode<T> = predecessor(it) as TNode<T>
+                    //交换该节点与后继节点的值，这个时候就相当于要删除 后继节点。
+                    it.value = predecessorNode.value
+                    // 删除后继节点，因为左子树的后继节点的右孩子一定是null，
+                    return predecessorNode.parent
                 }
             }
         }
