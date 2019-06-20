@@ -25,54 +25,52 @@ class AVLTree : BinarySearchTree<Int>() {
 
     override fun insert(value: Int): Boolean {
         val insertP = insertInternal(value)
-        heightR(root)
+        calculateAllNodesHeight(root)
         println("after insert $value, parent's value = ${insertP?.value}")
         printTree()
         rebuild(insertP)
         return insertP == null
     }
 
-    private fun rebuild(insertP: TNode<Int>?) {
+    override fun remove(value: Int): Boolean {
+        val removeP = removeInternal(value)
+        calculateAllNodesHeight(root)
+        println("after remove $value, deleted parent's value = ${removeP?.value}")
+        printTree()
+        rebuild(removeP)
+        return removeP == null
+    }
+
+    private fun rebuild(parent: TNode<Int>?) {
         //https://www.cnblogs.com/qm-article/p/9349681.html
-        var p = insertP
+        var p = parent
         while (p != null) {
-            val lh = p.left.height()
-            val rh = p.right.height()
-            val bf = lh - rh
+            val bf = p.balance()
             if (bf >= 2) {
-                rebuildAfterInsert(p, true)
+                rotationAfterChanged(p, true)
             } else if (bf <= -2) {
-                rebuildAfterInsert(p, false)
+                rotationAfterChanged(p, false)
             }
             p = p.parent
         }
     }
 
-    private fun rebuildAfterInsert(p: TNode<Int>, left: Boolean) {
+    private fun rotationAfterChanged(p: TNode<Int>, left: Boolean) {
         if (left) {
             val lChild = p.left
-            if (lChild?.left != null) { //右旋
+            if (lChild.balance() >= 0) { //右旋
                 rightRotation(p)
-            } else if (lChild?.right != null) {
+            } else {
                 leftRightRotation(p)
             }
         } else {
             val rChild = p.right
-            if (rChild?.right != null) { //左旋
+            if (rChild.balance() <= 0) { //左旋
                 leftRotation(p)
-            } else if (rChild?.left != null) {
+            } else {
                 rightLeftRotation(p)
             }
         }
-    }
-
-    override fun remove(value: Int): Boolean {
-        val removeP = removeInternal(value)
-        heightR(root)
-        println("after remove $value, parent's value = ${removeP?.value}")
-        printTree()
-        rebuild(removeP)
-        return removeP == null
     }
 
     /**
@@ -108,7 +106,7 @@ class AVLTree : BinarySearchTree<Int>() {
         nodeA.right = nodeT
         nodeT?.parent = nodeA
 
-        heightR(root)
+        calculateAllNodesHeight(root)
         println("\n\nafter left rotation, nodeA value = [${nodeA.value}]")
         printTree()
         return nodeB
@@ -147,7 +145,7 @@ class AVLTree : BinarySearchTree<Int>() {
         nodeA.left = nodeT
         nodeT?.parent = nodeA
 
-        heightR(root)
+        calculateAllNodesHeight(root)
         println("\n\nafter right rotation, nodeA value = [${nodeA.value}]")
         printTree()
         return nodeB

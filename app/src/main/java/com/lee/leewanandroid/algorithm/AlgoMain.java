@@ -2,9 +2,8 @@ package com.lee.leewanandroid.algorithm;
 
 import com.lee.leewanandroid.algorithm.tree.AVLTree;
 import com.lee.leewanandroid.algorithm.tree.AVLTree1;
-import com.lee.leewanandroid.algorithm.tree.BinarySearchTree;
-import com.lee.leewanandroid.algorithm.tree.Node;
-import com.lee.leewanandroid.algorithm.tree.Tree;
+import com.lee.leewanandroid.algorithm.tree.BSTree;
+import com.lee.leewanandroid.algorithm.tree.BTree;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -22,6 +21,10 @@ public class AlgoMain {
     public static String preOrderStr = "ABDEHICFJG";
     public static String inOrderStr = "DBHEIAFJCG";
     public static String postOrderStr = "DHIEBJFGCA";
+
+    public static String CMD_QUIT = "quit";
+    public static String CMD_CLEAR = "clear";
+    public static String CMD_PRINT = "print";
 
     public static void main(String[] args) {
 
@@ -65,7 +68,7 @@ public class AlgoMain {
          *          / \   \
          *         H  I    J
          */
-        Tree<String> tree = new Tree<>();
+        BTree<String> tree = new BTree<>();
 //        tree.createTree(treeData_pre);
 //        System.out.println("level order");
 //        tree.levelOrderTraverse(tree.getRoot());
@@ -132,51 +135,69 @@ public class AlgoMain {
 //        bst.printTree();
 
         long sTime = System.currentTimeMillis();
-        AVLTree1 avlTree = new AVLTree1();
-//        AVLTree avlTree = new AVLTree();
-        avlTree.insert(63);
-        avlTree.insert(58);
-        avlTree.insert(88);
-        avlTree.insert(37);
-        avlTree.insert(73);
-        avlTree.insert(99);
-        avlTree.insert(93);
-        avlTree.insert(100);
-        avlTree.insert(51);
-        avlTree.insert(30);
-        avlTree.insert(27);
-        avlTree.insert(25);
-        avlTree.insert(23);
-        avlTree.insert(21);
-        avlTree.insert(19);
-        avlTree.insert(17);
-        avlTree.insert(18);
-        avlTree.insert(15);
-        avlTree.insert(16);
-        avlTree.insert(13);
-        avlTree.insert(11);
+//        AVLTree1 avlTree = new AVLTree1();
+        AVLTree avlTree = new AVLTree();
+//        BSTree<Integer> avlTree = new BSTree<>();
+//        avlTree.insert(63);
+//        avlTree.insert(58);
+//        avlTree.insert(88);
+//        avlTree.insert(37);
+//        avlTree.insert(73);
+//        avlTree.insert(99);
+//        avlTree.insert(93);
+//        avlTree.insert(100);
+//        avlTree.insert(51);
+//        avlTree.insert(30);
+//        avlTree.insert(27);
+//        avlTree.insert(25);
+//        avlTree.insert(23);
+//        avlTree.insert(21);
+//        avlTree.insert(19);
+//        avlTree.insert(17);
+//        avlTree.insert(18);
+//        avlTree.insert(15);
+//        avlTree.insert(16);
+//        avlTree.insert(13);
+//        avlTree.insert(11);
+//        avlTree.insert(9);
+//        avlTree.insert(75);
+//        avlTree.insert(74);
+//        avlTree.remove(21);
+//        avlTree.remove(25);
+//        avlTree.remove(27);
+//        avlTree.remove(23);
+//        avlTree.remove(30);
+//        avlTree.remove(37);
+//        avlTree.remove(51);
+//        avlTree.remove(58);
+//        avlTree.remove(63);
+//        avlTree.remove(73);
+        avlTree.insert(20);
         avlTree.insert(9);
-        avlTree.insert(75);
-        avlTree.insert(74);
-        avlTree.remove(21);
-        avlTree.remove(25);
-        avlTree.remove(27);
-        avlTree.remove(23);
-        avlTree.remove(15);
-        avlTree.remove(58);
+        avlTree.insert(25);
+        avlTree.insert(15);
+        avlTree.insert(30);
+        avlTree.insert(12);
+        avlTree.insert(18);
         long endTime = System.currentTimeMillis();
         System.out.println("time cost = " + (endTime - sTime));
 
         Scanner input = new Scanner(System.in);
         String cmd;
-        int key;
-        while (!(cmd = input.nextLine()).equals("quit")) {
-            if ("i".equalsIgnoreCase(cmd)) {
-                key = input.nextInt();
-                avlTree.insert(key);
-            } else if ("r".equalsIgnoreCase(cmd)) {
-                key = input.nextInt();
-                avlTree.remove(key);
+        while (!CMD_QUIT.equalsIgnoreCase(cmd = input.nextLine())) {
+            String[] key = cmd.split(" ");
+            if ("i".equalsIgnoreCase(key[0])) {
+                if (key.length > 1) {
+                    avlTree.insert(Integer.parseInt(key[1]));
+                }
+            } else if ("r".equalsIgnoreCase(key[0])) {
+                if (key.length > 1) {
+                    avlTree.remove(Integer.parseInt(key[1]));
+                }
+            } else if (CMD_CLEAR.equalsIgnoreCase(key[0])) {
+                avlTree.clear();
+            } else if (CMD_PRINT.equalsIgnoreCase(key[0])) {
+                avlTree.printTree(avlTree.getRoot());
             }
         }
     }

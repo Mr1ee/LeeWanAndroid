@@ -5,7 +5,7 @@ import kotlin.collections.ArrayList
 
 /**
  *
- * @Description:    Tree
+ * @Description:    BTree 二叉树 binary tree
  * @Author:         lihuayong
  * @CreateDate:     2019-06-17 10:46
  * @UpdateUser:
@@ -14,7 +14,8 @@ import kotlin.collections.ArrayList
  * @Version:        1.0
  */
 @Suppress("unused")
-open class Tree<T> {
+open class BTree<T> : ITreeAction<T> {
+
     /**
      * 层序遍历构建串 [A B C D E F G # # H I # J]
      *
@@ -34,6 +35,38 @@ open class Tree<T> {
      */
 
     var root: Node<T>? = null
+
+    /**
+     * clear tree
+     */
+    override fun clear() {
+        root = null
+        println("clear tree.")
+    }
+
+    /**
+     * insert node to tree, return true if insert success!
+     */
+    override fun insert(value: T): Boolean {
+        //need to be override by subclass
+        return false
+    }
+
+    /**
+     * remove node equals value, return true if remove success!
+     */
+    override fun remove(value: T): Boolean {
+        //need to be override by subclass
+        return false
+    }
+
+    /**
+     * find node equals value, return null if not find!
+     */
+    override fun find(value: T): Node<T>? {
+        //need to be override by subclass
+        return null
+    }
 
     open fun createTree(data: ArrayList<T>) {
         val stack = Stack<T>()
@@ -104,7 +137,7 @@ open class Tree<T> {
      * @param inOrder  中序遍历串
      */
     private fun buildTreeInner(preOrder: String?, inOrder: String?): Node<Char>? {
-        if (preOrder.isNullOrEmpty() || inOrder.isNullOrEmpty()) return null
+        if (preOrder.isNullOrEmpty() || inOrder.isNullOrEmpty() || preOrder.length != inOrder.length) return null
         val parent = Node(preOrder.first())
         val length = inOrder.indexOf(preOrder.first())
         parent.left =
@@ -119,7 +152,7 @@ open class Tree<T> {
      * @param inOrder   中序遍历串
      */
     private fun buildTreeInner2(postOrder: String?, inOrder: String?): Node<Char>? {
-        if (postOrder.isNullOrEmpty() || inOrder.isNullOrEmpty()) return null
+        if (postOrder.isNullOrEmpty() || inOrder.isNullOrEmpty() || postOrder.length != inOrder.length) return null
         val parent = Node(postOrder.last())
         val length = inOrder.indexOf(postOrder.last())
         parent.left =
@@ -268,18 +301,18 @@ open class Tree<T> {
     /**
      * calculate all node's height
      */
-    fun heightR(node: Node<Int>?): Int {
+    protected fun calculateAllNodesHeight(node: Node<T>?): Int {
         if (node == null) {
             return 0
         }
         var l: Int
         var r: Int
         node.left.let {
-            l = heightR(it)
+            l = calculateAllNodesHeight(it)
         }
 
         node.right.let {
-            r = heightR(it)
+            r = calculateAllNodesHeight(it)
         }
 
         node.height = if (l > r) {
@@ -303,7 +336,11 @@ open class Tree<T> {
      * ┌ D ┐   ┌ E ┐   ┌ F ┐   ┌ G ┐
      * H   I   #   J   #   #   #   #
      */
-    fun printTree(r: Node<T> = this.root!!) {
+    fun printTree(r: Node<T>? = this.root) {
+        if (r == null) {
+            println("tree has empty")
+            return
+        }
         val height = r.height()
         val fullNodesList = ArrayList<ArrayList<Node<T>>>()
         fillTree(fullNodesList, r, height)

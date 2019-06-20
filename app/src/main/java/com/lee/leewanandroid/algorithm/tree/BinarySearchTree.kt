@@ -23,7 +23,7 @@ package com.lee.leewanandroid.algorithm.tree
  *                   /
  *                  95
  */
-open class BinarySearchTree<T : Comparable<T>> : Tree<T>(), ITreeAction<T> {
+open class BinarySearchTree<T : Comparable<T>> : BTree<T>() {
 
     /**
      * 二叉搜索树删除
@@ -192,7 +192,10 @@ open class BinarySearchTree<T : Comparable<T>> : Tree<T>(), ITreeAction<T> {
                         } else {
                             p.right = null
                         }
-                    } ?: return null
+                    } ?: return run {
+                        root = null
+                        null
+                    }
 
                     return node.parent
                 }
@@ -209,9 +212,9 @@ open class BinarySearchTree<T : Comparable<T>> : Tree<T>(), ITreeAction<T> {
                 else -> {
                     //找到左子树的最大（后继节点），或者右子树的最小节点(前驱节点)
                     val predecessorNode: TNode<T> = predecessor(it) as TNode<T>
-                    //交换该节点与后继节点的值，这个时候就相当于要删除 后继节点。
+                    //交换该节点与前驱节点的值，这个时候就相当于要删除 前驱节点。
                     it.value = predecessorNode.value
-                    // 删除后继节点，因为左子树的后继节点的右孩子一定是null，
+                    // 删除前驱节点，因为右子树的前驱节点的左孩子一定是null，
                     return predecessorNode.parent
                 }
             }

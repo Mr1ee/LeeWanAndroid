@@ -17,4 +17,6 @@ interface ITreeAction<T> {
     fun remove(value: T): Boolean
 
     fun find(value: T): Node<T>?
+
+    fun clear()
 }
