@@ -29,52 +29,11 @@ open class BinarySearchTree<T : Comparable<T>> : BTree<T>() {
      * 二叉搜索树删除
      */
     override fun remove(value: T): Boolean {
-        val node = find(value) as TNode?
-        node?.let {
-            when {
-                it.isLeaf() -> {
-                    it.parent?.let { p ->
-                        if (p.left == node) {
-                            p.left = null
-                        } else {
-                            p.right = null
-                        }
-                    } ?: this.root.apply { root = null }
-
-                    return true
-                }
-                it.noLeftChild() -> {
-                    deleteNode(delNode = node, child = it.right as TNode<T>)
-                    return true
-                }
-                it.noRightChild() -> {
-                    deleteNode(delNode = node, child = it.left as TNode<T>)
-                    return true
-                }
-                else -> {
-                    //找到左子树的最大（后继节点），或者右子树的最小节点(前驱节点)
-                    val lMax: TNode<T> = successor(it) as TNode<T>
-                    //交换该节点与后继节点的值，这个时候就相当于要删除 后继节点。
-                    it.value = lMax.value
-                    return true
-                }
-            }
-        }
-
-        return false
+        return removeInternal(value) == null
     }
 
-    /**
-     * 删除[delNode]节点
-     */
-    private fun deleteNode(delNode: TNode<T>, child: TNode<T>) {
-        delNode.parent?.let { p ->
-            if (p.value > delNode.value) {
-                p.left = child
-            } else {
-                p.right = child
-            }
-        } ?: root.apply { root = child }
+    override fun insert(value: T): Boolean {
+        return insertInternal(value) == null
     }
 
     /**
@@ -141,11 +100,6 @@ open class BinarySearchTree<T : Comparable<T>> : BTree<T>() {
         }
 
         return null
-    }
-
-    override fun insert(value: T): Boolean {
-        val node = insertInternal(value)
-        return node == null
     }
 
     fun insertInternal(value: T): TNode<T>? {

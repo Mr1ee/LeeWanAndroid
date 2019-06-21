@@ -85,18 +85,15 @@ class AVLTree : BinarySearchTree<Int>() {
     private fun leftRotation(nodeA: TNode<Int>): TNode<Int> {
         val nodeB = nodeA.right as TNode<Int>
         val nodeT = nodeB.left as TNode<Int>?
-        if (nodeA.parent != null) {
-            nodeA.parent?.let { p ->
-                if (p.left == nodeA) {
-                    p.left = nodeB
-                } else {
-                    p.right = nodeB
-                }
-                nodeB.parent = p
+        nodeB.parent = nodeA.parent
+        nodeA.parent?.let { p ->
+            if (p.left == nodeA) {
+                p.left = nodeB
+            } else {
+                p.right = nodeB
             }
-        } else {
+        } ?: run {
             //nodeA 是root节点
-            nodeB.parent = null
             root = nodeB
         }
 
@@ -125,20 +122,18 @@ class AVLTree : BinarySearchTree<Int>() {
     private fun rightRotation(nodeA: TNode<Int>): TNode<Int> {
         val nodeB = nodeA.left as TNode<Int>
         val nodeT = nodeB.right as TNode<Int>?
-        if (nodeA.parent != null) {
-            nodeA.parent?.let { p ->
-                if (p.left == nodeA) {
-                    p.left = nodeB
-                } else {
-                    p.right = nodeB
-                }
-                nodeB.parent = p
+        nodeB.parent = nodeA.parent
+        nodeA.parent?.let { p ->
+            if (p.left == nodeA) {
+                p.left = nodeB
+            } else {
+                p.right = nodeB
             }
-        } else {
+        } ?: run {
             //nodeA 是root节点
-            nodeB.parent = null
             root = nodeB
         }
+
         nodeB.right = nodeA
         nodeA.parent = nodeB
 
