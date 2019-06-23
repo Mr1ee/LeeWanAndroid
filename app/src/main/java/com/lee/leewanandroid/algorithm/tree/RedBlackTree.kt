@@ -164,7 +164,8 @@ class RedBlackTree : BinarySearchTree<Int>() {
              *  x, br and br color is all BLACK.
              *  set b color RED, and set p as x to continue.
              *  [Tips] In this situation, we can easily balance p-tree by reduce p's right subtree,
-             *        just change b's color from BLACK to RED!!!
+             *        just change b's color from BLACK to RED. but p's parent(if has) will be out-off-balance
+             *        so we just set p as x to continue.
              *      p?                       p?
              *     / \        color         / \
              *    x   b     transform      x  [b]
@@ -175,7 +176,7 @@ class RedBlackTree : BinarySearchTree<Int>() {
              *  x, b color is BLACK, but br and br color not all BLACK
              *  A: if br is RED,  left rotation p and set bl color p's color, set p、br color BLACK.
              *  [Tips] In this situation, we add p's left subtree's BLACK node by left rotating p, and
-             *          don't forget to adjust nodes color
+             *          don't forget to adjust nodes color. and NOW we have balanced all tree, just break.
              *
              *  B: if bl is RED and br is BLACK, right rotation b and set b color RED, set bl color BLACK,
              *  then we just do step A.
@@ -220,6 +221,7 @@ class RedBlackTree : BinarySearchTree<Int>() {
                     p.color = BLACK
                     (b?.right as RBNode?)?.color = BLACK
                     leftRotation(p)
+                    // break !!!
                     x = root as RBNode?
                 }
             } else { //symmetric
@@ -246,6 +248,7 @@ class RedBlackTree : BinarySearchTree<Int>() {
                     p.color = BLACK
                     (b?.left as RBNode?)?.color = BLACK
                     rightRotation(p)
+                    // break !!!
                     x = root as RBNode?
                 }
             }
