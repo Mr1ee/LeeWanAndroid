@@ -1,9 +1,9 @@
 package com.lee.leewanandroid.algorithm;
 
 import com.lee.leewanandroid.algorithm.tree.AVLTree;
-import com.lee.leewanandroid.algorithm.tree.AVLTree1;
-import com.lee.leewanandroid.algorithm.tree.BSTree;
+import com.lee.leewanandroid.algorithm.tree.AVLTreeR;
 import com.lee.leewanandroid.algorithm.tree.BTree;
+import com.lee.leewanandroid.algorithm.tree.RedBlackTree;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -25,6 +25,7 @@ public class AlgoMain {
     public static String CMD_QUIT = "quit";
     public static String CMD_CLEAR = "clear";
     public static String CMD_PRINT = "print";
+    public static String CMD_SIZE = "size";
 
     public static void main(String[] args) {
 
@@ -135,8 +136,9 @@ public class AlgoMain {
 //        bst.printTree();
 
         long sTime = System.currentTimeMillis();
-//        AVLTree1 avlTree = new AVLTree1();
-        AVLTree avlTree = new AVLTree();
+//        AVLTreeR avlTree = new AVLTreeR();
+        RedBlackTree avlTree = new RedBlackTree();
+//        AVLTree avlTree = new AVLTree();
 //        BSTree<Integer> avlTree = new BSTree<>();
 //        avlTree.insert(63);
 //        avlTree.insert(58);
@@ -198,6 +200,8 @@ public class AlgoMain {
                 avlTree.clear();
             } else if (CMD_PRINT.equalsIgnoreCase(key[0])) {
                 avlTree.printTree(avlTree.getRoot());
+            }else if (CMD_SIZE.equalsIgnoreCase(key[0])) {
+                avlTree.printTreeSize();
             }
         }
     }

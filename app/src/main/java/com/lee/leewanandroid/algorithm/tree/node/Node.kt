@@ -1,4 +1,4 @@
-package com.lee.leewanandroid.algorithm.tree
+package com.lee.leewanandroid.algorithm.tree.node
 
 open class Node<T>(t: T, var height: Int = 1) {
     open var left: Node<T>? = null

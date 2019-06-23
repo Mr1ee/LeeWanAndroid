@@ -1,5 +1,8 @@
 package com.lee.leewanandroid.algorithm.tree
 
+import com.lee.leewanandroid.algorithm.tree.node.Node
+import com.lee.leewanandroid.algorithm.tree.node.TNode
+
 /**
  *
  * @Description:    BinarySearchTree 二叉搜索树
@@ -59,6 +62,7 @@ open class BinarySearchTree<T : Comparable<T>> : BTree<T>() {
     /**
      * find 前驱节点
      */
+    @Suppress("unused")
     fun predecessor(node: Node<T>): Node<T> {
         var p = node
         var child = node.right!!
@@ -115,7 +119,10 @@ open class BinarySearchTree<T : Comparable<T>> : BTree<T>() {
                     }
                     value > parent.value -> {
                         if (parent.right == null) {
-                            parent.right = TNode(value, parent as TNode<T>?)
+                            parent.right = TNode(
+                                value,
+                                parent as TNode<T>?
+                            )
                             return parent
                         } else {
                             parent = parent.right
@@ -123,7 +130,10 @@ open class BinarySearchTree<T : Comparable<T>> : BTree<T>() {
                     }
                     else -> {
                         if (parent.left == null) {
-                            parent.left = TNode(value, parent as TNode<T>?)
+                            parent.left = TNode(
+                                value,
+                                parent as TNode<T>?
+                            )
                             return parent
                         } else {
                             parent = parent.left
@@ -154,18 +164,18 @@ open class BinarySearchTree<T : Comparable<T>> : BTree<T>() {
                     return node.parent
                 }
                 it.noLeftChild() -> {
-                    val predecessorNode: TNode<T> = predecessor(it) as TNode<T>
+                    val predecessorNode: TNode<T> = it.predecessor()
                     it.value = predecessorNode.value
                     return predecessorNode.parent
                 }
                 it.noRightChild() -> {
-                    val successorNode: TNode<T> = successor(it) as TNode<T>
+                    val successorNode: TNode<T> = it.successor()
                     it.value = successorNode.value
                     return successorNode.parent
                 }
                 else -> {
                     //找到左子树的最大（后继节点），或者右子树的最小节点(前驱节点)
-                    val predecessorNode: TNode<T> = predecessor(it) as TNode<T>
+                    val predecessorNode: TNode<T> = it.predecessor()
                     //交换该节点与前驱节点的值，这个时候就相当于要删除 前驱节点。
                     it.value = predecessorNode.value
                     // 删除前驱节点，因为右子树的前驱节点的左孩子一定是null，

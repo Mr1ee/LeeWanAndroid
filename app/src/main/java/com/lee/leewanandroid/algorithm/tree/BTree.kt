@@ -1,5 +1,7 @@
 package com.lee.leewanandroid.algorithm.tree
 
+import com.lee.leewanandroid.algorithm.tree.node.Node
+import com.lee.leewanandroid.algorithm.tree.node.RBNode
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -79,6 +81,10 @@ open class BTree<T> : ITreeAction<T> {
         root = createTreeByPreOrder(stack)
     }
 
+    fun printTreeSize() {
+        println("tree size is ${root.size()}")
+    }
+
     /**
      * @param data 用来构建树的数据,'#'用来标记为null
      */
@@ -112,7 +118,8 @@ open class BTree<T> : ITreeAction<T> {
         if (data.isEmpty()) return null
         val value = data.pop()
         return if (value != "#") {
-            val parent: Node<T> = Node(value)
+            val parent: Node<T> =
+                Node(value)
             parent.left = createTreeByPreOrder(data)
             parent.right = createTreeByPreOrder(data)
             parent
@@ -301,7 +308,7 @@ open class BTree<T> : ITreeAction<T> {
     /**
      * calculate all node's height
      */
-    protected fun calculateAllNodesHeight(node: Node<T>?): Int {
+    protected fun calculateAllNodesHeight(node: Node<T>? = root): Int {
         if (node == null) {
             return 0
         }
@@ -337,6 +344,7 @@ open class BTree<T> : ITreeAction<T> {
      * H   I   #   J   #   #   #   #
      */
     fun printTree(r: Node<T>? = this.root) {
+        calculateAllNodesHeight()
         if (r == null) {
             println("tree has empty")
             return
@@ -360,9 +368,15 @@ open class BTree<T> : ITreeAction<T> {
                     val t = it[j].value!!.toString()
                     when {
                         t == "#" -> print("   ")
-                        t.length == 1 -> print(" $t ")
-                        t.length == 2 -> print(" $t")
-                        else -> print(t)
+                        t.length == 1 -> if (it[j] is RBNode && (it[j] as RBNode).color == RBNode.RED) {
+                            print("[$t]")
+                        } else print(" $t ")
+                        t.length == 2 -> if (it[j] is RBNode && (it[j] as RBNode).color == RBNode.RED) {
+                            print("[$t]")
+                        } else print(" $t")
+                        else -> if (it[j] is RBNode && (it[j] as RBNode).color == RBNode.RED) {
+                            print("[$t]")
+                        } else print(t)
                     }
 
                     if (it[j].right!!.value != "#") {
@@ -379,9 +393,15 @@ open class BTree<T> : ITreeAction<T> {
                     val t = it[j].value!!.toString()
                     when {
                         t == "#" -> print("   ")
-                        t.length == 1 -> print(" $t ")
-                        t.length == 2 -> print(" $t")
-                        else -> print(t)
+                        t.length == 1 -> if (it[j] is RBNode && (it[j] as RBNode).color == RBNode.RED) {
+                            print("[$t]")
+                        } else print(" $t ")
+                        t.length == 2 -> if (it[j] is RBNode && (it[j] as RBNode).color == RBNode.RED) {
+                            print("[$t]")
+                        } else print(" $t")
+                        else -> if (it[j] is RBNode && (it[j] as RBNode).color == RBNode.RED) {
+                            print("[$t]")
+                        } else print(t)
                     }
                     print(" ")
                 }

@@ -1,5 +1,7 @@
 package com.lee.leewanandroid.algorithm.tree
 
+import com.lee.leewanandroid.algorithm.tree.node.Node
+
 /**
  *
  * @Description:    ITreeAction 插入 删除 查找

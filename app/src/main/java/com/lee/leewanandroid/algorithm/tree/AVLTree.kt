@@ -1,5 +1,7 @@
 package com.lee.leewanandroid.algorithm.tree
 
+import com.lee.leewanandroid.algorithm.tree.node.TNode
+
 /**
  *
  * @Description:    AVLTree 平衡二叉树 插入删除的非递归实现版本
@@ -25,7 +27,6 @@ class AVLTree : BinarySearchTree<Int>() {
 
     override fun insert(value: Int): Boolean {
         val insertP = insertInternal(value)
-        calculateAllNodesHeight(root)
         println("after insert $value, parent's value = ${insertP?.value}")
         printTree()
         rebuild(insertP)
@@ -34,7 +35,6 @@ class AVLTree : BinarySearchTree<Int>() {
 
     override fun remove(value: Int): Boolean {
         val removeP = removeInternal(value)
-        calculateAllNodesHeight(root)
         println("after remove $value, deleted parent's value = ${removeP?.value}")
         printTree()
         rebuild(removeP)
@@ -103,7 +103,6 @@ class AVLTree : BinarySearchTree<Int>() {
         nodeA.right = nodeT
         nodeT?.parent = nodeA
 
-        calculateAllNodesHeight(root)
         println("\n\nafter left rotation, nodeA value = [${nodeA.value}]")
         printTree()
         return nodeB
@@ -140,7 +139,6 @@ class AVLTree : BinarySearchTree<Int>() {
         nodeA.left = nodeT
         nodeT?.parent = nodeA
 
-        calculateAllNodesHeight(root)
         println("\n\nafter right rotation, nodeA value = [${nodeA.value}]")
         printTree()
         return nodeB

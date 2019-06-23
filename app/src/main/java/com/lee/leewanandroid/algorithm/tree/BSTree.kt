@@ -1,5 +1,7 @@
 package com.lee.leewanandroid.algorithm.tree
 
+import com.lee.leewanandroid.algorithm.tree.node.Node
+
 /**
  *
  * @Description:    BSTree 递归实现的二叉搜索树
@@ -12,18 +14,18 @@ package com.lee.leewanandroid.algorithm.tree
  */
 open class BSTree<T : Comparable<T>> : BTree<T>() {
     override fun insert(value: T): Boolean {
-        println("insert [$value]")
+        println("\n\ninsert [$value]")
         root = insertInternal(root, value)
-        println("\n\nafter insert [$value], root value = [${root?.value}]")
+        println("after insert [$value], root value = [${root?.value}]")
         printTree()
         return find(value) != null
     }
 
     override fun remove(value: T): Boolean {
-        println("remove [$value]")
+        println("\n\nremove [$value]")
         if (find(value) != null) {
             root = removeInternal(root, value)
-            println("\n\nafter remove [$value], root value = [${root?.value}]")
+            println("after remove [$value], root value = [${root?.value}]")
             printTree()
             return true
         }

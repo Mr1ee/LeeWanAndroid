@@ -1,8 +1,10 @@
 package com.lee.leewanandroid.algorithm.tree
 
+import com.lee.leewanandroid.algorithm.tree.node.Node
+
 /**
  *
- * @Description:    AVLTree1 插入删除的递归实现版本,不要指向parent的指针
+ * @Description:    AVLTreeR 插入删除的递归实现版本,不要指向parent的指针
  * @Author:         lihuayong
  * @CreateDate:     2019-06-19 15:00
  * @UpdateUser:
@@ -10,7 +12,7 @@ package com.lee.leewanandroid.algorithm.tree
  * @UpdateRemark:
  * @Version:        1.0
  */
-class AVLTree1 : BSTree<Int>() {
+class AVLTreeR : BSTree<Int>() {
 
     override fun rebuildAfterTreeChanged(node: Node<Int>): Node<Int> {
         /* 3. Get the balance factor of this ancestor
@@ -95,7 +97,7 @@ class AVLTree1 : BSTree<Int>() {
         nodeZ.height = max(nodeZ.left.height(), nodeZ.right.height()) + 1
         nodeY.height = max(nodeY.left.height(), nodeY.right.height()) + 1
 
-        println("\n\nafter right rotation, node value = [${nodeY.value}]")
+        println("after right rotation, node value = [${nodeY.value}]")
         printTree(nodeY)
         // Return new root
         return nodeY
@@ -127,7 +129,7 @@ class AVLTree1 : BSTree<Int>() {
         nodeZ.height = max(nodeZ.left.height(), nodeZ.right.height()) + 1
         nodeY.height = max(nodeY.left.height(), nodeY.right.height()) + 1
 
-        println("\n\nafter left rotation, node value = [${nodeY.value}]")
+        println("after left rotation, node value = [${nodeY.value}]")
         printTree(nodeY)
         // Return new root
         return nodeY
