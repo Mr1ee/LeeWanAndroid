@@ -1,9 +1,7 @@
 package com.lee.leewanandroid.algorithm;
 
-import com.lee.leewanandroid.algorithm.tree.AVLTree;
-import com.lee.leewanandroid.algorithm.tree.AVLTreeR;
-import com.lee.leewanandroid.algorithm.tree.BTree;
-import com.lee.leewanandroid.algorithm.tree.RedBlackTree;
+import com.lee.leewanandroid.algorithm.kotin.tree.BTree;
+import com.lee.leewanandroid.algorithm.kotin.tree.RedBlackTree;
 
 import java.util.ArrayList;
 import java.util.Arrays;
