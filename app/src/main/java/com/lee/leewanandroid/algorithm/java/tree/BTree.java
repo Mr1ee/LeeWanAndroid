@@ -45,8 +45,9 @@ public class BTree<K extends Comparable<K>, V> implements ITreeAction<K, V> {
 
     @Nullable
     private Node<K, V> buildTreeWithPreAndInSequenceInternal(@NotNull List<KeyValue<K, V>> preOrder, @NotNull List<KeyValue<K, V>> inOrder) {
-        if (preOrder.isEmpty() || inOrder.isEmpty() || preOrder.size() != inOrder.size())
+        if (preOrder.isEmpty() || inOrder.isEmpty() || preOrder.size() != inOrder.size()) {
             return null;
+        }
 
         int size = preOrder.size();
         int firstIndex = 0;
@@ -67,8 +68,9 @@ public class BTree<K extends Comparable<K>, V> implements ITreeAction<K, V> {
 
     @Nullable
     private Node<K, V> buildTreeWithPostAndInSequenceInternal(@NotNull List<KeyValue<K, V>> postOrder, @NotNull List<KeyValue<K, V>> inOrder) {
-        if (postOrder.isEmpty() || inOrder.isEmpty() || postOrder.size() != inOrder.size())
+        if (postOrder.isEmpty() || inOrder.isEmpty() || postOrder.size() != inOrder.size()) {
             return null;
+        }
 
         int size = inOrder.size();
         int lastIndex = inOrder.size() - 1;
@@ -85,13 +87,13 @@ public class BTree<K extends Comparable<K>, V> implements ITreeAction<K, V> {
     /**
      * calculate all node's height
      */
-    protected int calculateAllNodesHeight(Node<K, V> node) {
+    int calculateAllNodesHeight(Node<K, V> node) {
         if (node == null) {
             return 0;
         }
         int l = 0, r = 0;
-        Node<K, V> left = node.getLeft();
-        Node<K, V> right = node.getRight();
+        Node<K, V> left = node.left;
+        Node<K, V> right = node.right;
         if (left != null) {
             l = calculateAllNodesHeight(left);
         }
@@ -100,9 +102,9 @@ public class BTree<K extends Comparable<K>, V> implements ITreeAction<K, V> {
             r = calculateAllNodesHeight(right);
         }
 
-        node.setHeight(l > r ? l + 1 : r + 1);
+        node.height = l > r ? l + 1 : r + 1;
 
-        return node.getHeight();
+        return node.height;
     }
 
     public void printTree() {
@@ -128,7 +130,6 @@ public class BTree<K extends Comparable<K>, V> implements ITreeAction<K, V> {
         fillTree(fullNodesList, r, height);
 
         int maxWidth = (int) Math.pow(2.0, height);
-        println("max with = " + maxWidth);
         for (int index = 0; index < fullNodesList.size(); index++) {
             List<Node<K, V>> subList = fullNodesList.get(index);
             int size = subList.size();
@@ -140,15 +141,26 @@ public class BTree<K extends Comparable<K>, V> implements ITreeAction<K, V> {
                     if (key.equals("#")) {
                         printChar(" ", (maxWidth / size + 1));
                     } else {
+                        boolean isRbNode = this instanceof RBTree;
                         String value = subList.get(j).getValue().toString();
                         int length = value.length();
                         if (length <= 2) {
-                            print(" ");
-                            print(value);
-                            printChar(" ", (maxWidth / size - length));
+                            if (isRbNode && subList.get(j).isRed()) {
+                                print("[" + value + "]");
+                                printChar(" ", (maxWidth / size - length - 1));
+                            } else {
+                                print(" ");
+                                print(value);
+                                printChar(" ", (maxWidth / size - length));
+                            }
                         } else {
-                            print(value);
-                            printChar(" ", (maxWidth / size - length - 1));
+                            if (isRbNode) {
+                                print("[" + value + "]");
+                                printChar(" ", (maxWidth / size - length - 2));
+                            } else {
+                                print(value);
+                                printChar(" ", (maxWidth / size - length - 1));
+                            }
                         }
                     }
                 }
@@ -156,15 +168,20 @@ public class BTree<K extends Comparable<K>, V> implements ITreeAction<K, V> {
                 //print key
                 for (int j = 0; j < subList.size(); j++) {
                     printChar(" ", (maxWidth / size / 2 - 2));
-                    if (subList.get(j).getLeft().getKey() != "#") {
+                    if (!subList.get(j).getLeft().getKey().toString().equals("#")) {
                         print("┌");
                         printChar("─", (maxWidth / size / 2 - 3));
                     } else {
                         printChar(" ", (maxWidth / size / 2 - 2));
                     }
-                    print(subList.get(j));
+                    String key = subList.get(j).getKey().toString();
+                    if (key.equals("#")) {
+                        print("   ");
+                    } else {
+                        print(subList.get(j));
+                    }
 
-                    if (subList.get(j).getRight().getKey() != "#") {
+                    if (!subList.get(j).getRight().getKey().toString().equals("#")) {
                         printChar("─", (maxWidth / size / 2 - 3));
                         print("┐");
                     } else {
@@ -181,15 +198,26 @@ public class BTree<K extends Comparable<K>, V> implements ITreeAction<K, V> {
                     if (key.equals("#")) {
                         printChar(" ", (maxWidth / size + 1));
                     } else {
+                        boolean isRbNode = this instanceof RBTree;
                         String value = subList.get(j).getValue().toString();
                         int length = value.length();
                         if (length <= 2) {
-                            print(" ");
-                            print(value);
-                            printChar(" ", (maxWidth / size - length));
+                            if (isRbNode && subList.get(j).isRed()) {
+                                print("[" + value + "]");
+                                printChar(" ", (maxWidth / size - length - 1));
+                            } else {
+                                print(" ");
+                                print(value);
+                                printChar(" ", (maxWidth / size - length));
+                            }
                         } else {
-                            print(value);
-                            printChar(" ", (maxWidth / size - length + 1));
+                            if (isRbNode) {
+                                print("[" + value + "]");
+                                printChar(" ", (maxWidth / size - length - 2));
+                            } else {
+                                print(value);
+                                printChar(" ", (maxWidth / size - length - 1));
+                            }
                         }
                     }
                 }
@@ -259,7 +287,9 @@ public class BTree<K extends Comparable<K>, V> implements ITreeAction<K, V> {
      * delete all the "#" node
      */
     private void deleteNull(Node<K, V> node) {
-        if (node == null) return;
+        if (node == null) {
+            return;
+        }
         Node<K, V> left = node.getLeft();
         Node<K, V> right = node.getRight();
 
@@ -289,7 +319,7 @@ public class BTree<K extends Comparable<K>, V> implements ITreeAction<K, V> {
         }
     }
 
-    private void print(CharSequence c) {
+    protected void print(CharSequence c) {
         System.out.print(c);
     }
 
@@ -298,7 +328,7 @@ public class BTree<K extends Comparable<K>, V> implements ITreeAction<K, V> {
     }
 
 
-    private void println(CharSequence c) {
+    protected void println(CharSequence c) {
         System.out.println(c);
     }
 }

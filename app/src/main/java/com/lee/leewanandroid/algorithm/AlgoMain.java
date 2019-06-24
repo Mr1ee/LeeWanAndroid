@@ -1,5 +1,6 @@
 package com.lee.leewanandroid.algorithm;
 
+import com.lee.leewanandroid.algorithm.kotin.tree.AVLTree;
 import com.lee.leewanandroid.algorithm.kotin.tree.BTree;
 import com.lee.leewanandroid.algorithm.kotin.tree.RedBlackTree;
 
@@ -135,8 +136,8 @@ public class AlgoMain {
 
         long sTime = System.currentTimeMillis();
 //        AVLTreeR avlTree = new AVLTreeR();
-        RedBlackTree avlTree = new RedBlackTree();
-//        AVLTree avlTree = new AVLTree();
+//        RedBlackTree avlTree = new RedBlackTree();
+        AVLTree avlTree = new AVLTree();
 //        BSTree<Integer> avlTree = new BSTree<>();
 //        avlTree.insert(63);
 //        avlTree.insert(58);

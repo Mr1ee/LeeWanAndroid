@@ -2,12 +2,14 @@ package com.lee.leewanandroid.algorithm.java.tree.node;
 
 @SuppressWarnings("unused")
 public class Node<K, V> {
-    protected Node<K, V> left = null;
-    protected Node<K, V> right = null;
-    protected Node<K, V> parent;
-    protected int height = 1;
-    protected K key;
-    protected V value;
+    public static final boolean BLACK = true;
+    public Node<K, V> left = null;
+    public Node<K, V> right = null;
+    public Node<K, V> parent;
+    public int height = 1;
+    public boolean color = BLACK;
+    public K key;
+    public V value;
 
     public Node(K key, V value) {
         this(key, value, null);
@@ -72,7 +74,7 @@ public class Node<K, V> {
     }
 
     public boolean isLeaf() {
-        return this.left != null && this.right != null;
+        return this.left == null && this.right == null;
     }
 
     public boolean noLeftChild() {
@@ -83,9 +85,13 @@ public class Node<K, V> {
         return this.right == null;
     }
 
+    public boolean isRed() {
+        return color != BLACK;
+    }
+
     public int balance() {
-        int lh = left == null ? 0 : left.getHeight();
-        int rh = right == null ? 0 : right.getHeight();
+        int lh = left == null ? 0 : left.height;
+        int rh = right == null ? 0 : right.height;
         return lh - rh;
     }
 
