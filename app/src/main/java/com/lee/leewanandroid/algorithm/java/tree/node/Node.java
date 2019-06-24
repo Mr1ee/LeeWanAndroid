@@ -89,6 +89,10 @@ public class Node<K, V> {
         return color != BLACK;
     }
 
+    public boolean isBLACK() {
+        return color == BLACK;
+    }
+
     public int balance() {
         int lh = left == null ? 0 : left.height;
         int rh = right == null ? 0 : right.height;

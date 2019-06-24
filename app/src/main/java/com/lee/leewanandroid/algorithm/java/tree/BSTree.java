@@ -2,11 +2,12 @@ package com.lee.leewanandroid.algorithm.java.tree;
 
 import com.lee.leewanandroid.algorithm.java.tree.node.Node;
 
+@SuppressWarnings("unused")
 public class BSTree<K extends Comparable<K>, V> extends BTree<K, V> {
 
-    private OnTreeChangedListener listener = null;
+    private OnTreeChangedListener<K,V> listener = null;
 
-    public void setOnTreeChangedListener(OnTreeChangedListener listener) {
+    void setOnTreeChangedListener(OnTreeChangedListener<K,V> listener) {
         this.listener = listener;
     }
 
@@ -111,7 +112,7 @@ public class BSTree<K extends Comparable<K>, V> extends BTree<K, V> {
         return node;
     }
 
-    protected void updateNodeHeight(Node<K, V> node) {
+    void updateNodeHeight(Node<K, V> node) {
         int lh = getNodeHeight(node.left);
         int rh = getNodeHeight(node.right);
         node.height = (lh > rh ? lh + 1 : rh + 1);
@@ -175,13 +176,25 @@ public class BSTree<K extends Comparable<K>, V> extends BTree<K, V> {
 
             //fixAfterDeletion(node)
             if (listener != null) {
-                listener.fixAfterDeletion(node, true);
+                if (this instanceof RBTree ) {
+                    if (node.isBLACK()) {
+                        listener.fixAfterDeletion(replacement, true);
+                    }
+                } else {
+                    listener.fixAfterDeletion(node, true);
+                }
             }
         } else if (node.parent == null) { // return if we are the only node.
             root = null;
         } else { //  No children. Use self as phantom replacement and unlink.
             if (listener != null) {
-                listener.fixAfterDeletion(node, false);
+                if (this instanceof RBTree ) {
+                    if (node.isBLACK()) {
+                        listener.fixAfterDeletion(node, true);
+                    }
+                } else {
+                    listener.fixAfterDeletion(node, true);
+                }
             }
             if (node.parent != null) {
                 if (node == node.parent.left)
@@ -208,7 +221,7 @@ public class BSTree<K extends Comparable<K>, V> extends BTree<K, V> {
         }
     }
 
-    private int getNodeHeight(Node node) {
+    private int getNodeHeight(Node<K, V> node) {
         return node == null ? 0 : node.height;
     }
 }

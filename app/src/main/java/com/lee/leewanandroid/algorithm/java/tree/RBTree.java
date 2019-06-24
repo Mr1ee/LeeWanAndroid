@@ -23,18 +23,16 @@ public class RBTree<K extends Comparable<K>, V> extends BSTree<K, V> implements 
 
     /**
      * 插入节点之后的调整，平衡二叉树（AVL-Tree）或者红黑树（RB-Tree）
-     *
+     * <p>
      * 1 如果待删除结点 X 是一个红色结点，则直接删除即可，不会违反定义。
      * 2 如果待删除结点 X 是一个黑色结点，且其孩子结点 C 是红色的，那么只需要将 X 替换成 C，同时将 C 由红变黑即可。
      * 3 如果需要删除的结点 X 是黑色的，同时它的孩子结点 C 也是黑色的，这种情况需要进一步分场景讨论。
      *
-     *
      * @param x 插入的节点
      */
+    @SuppressWarnings("DanglingJavadoc")
     @Override
     public void fixAfterInsertion(Node<K, V> x) {
-        x.color = RED;
-
         /**
          * if parent color is RED, then there are four situations
          * SOME STATEMENT:
@@ -78,38 +76,42 @@ public class RBTree<K extends Comparable<K>, V> extends BSTree<K, V> implements 
          *
          * ----------------------------------------------------------
          */
+        x.color = RED;
         while (x != null && x != root && x.parent.color == RED) {
-            if (parentOf(x) == leftOf(parentOf(parentOf(x)))) {
-                Node<K, V> y = rightOf(parentOf(parentOf(x)));
-                if (colorOf(y) == RED) {
-                    setColor(parentOf(x), BLACK);
-                    setColor(y, BLACK);
-                    setColor(parentOf(parentOf(x)), RED);
-                    x = parentOf(parentOf(x));
+            Node<K, V> p = parentOf(x);
+            Node<K, V> g = parentOf(parentOf(x));
+            Node<K, V> u;
+            if (p == leftOf(g)) {
+               u = rightOf(g);
+                if (colorOf(u) == RED) {
+                    setColor(p, BLACK);
+                    setColor(u, BLACK);
+                    setColor(g, RED);
+                    x = g;
                 } else {
-                    if (x == rightOf(parentOf(x))) {
-                        x = parentOf(x);
+                    if (x == rightOf(p)) {
+                        x = p;
                         rotateLeft(x);
                     }
-                    setColor(parentOf(x), BLACK);
-                    setColor(parentOf(parentOf(x)), RED);
-                    rotateRight(parentOf(parentOf(x)));
+                    setColor(p, BLACK);
+                    setColor(g, RED);
+                    rotateRight(g);
                 }
             } else {
-                Node<K, V> y = leftOf(parentOf(parentOf(x)));
-                if (colorOf(y) == RED) {
-                    setColor(parentOf(x), BLACK);
-                    setColor(y, BLACK);
-                    setColor(parentOf(parentOf(x)), RED);
-                    x = parentOf(parentOf(x));
+                u = leftOf(g);
+                if (colorOf(u) == RED) {
+                    setColor(p, BLACK);
+                    setColor(u, BLACK);
+                    setColor(g, RED);
+                    x = g;
                 } else {
-                    if (x == leftOf(parentOf(x))) {
-                        x = parentOf(x);
+                    if (x == leftOf(p)) {
+                        x = p;
                         rotateRight(x);
                     }
-                    setColor(parentOf(x), BLACK);
-                    setColor(parentOf(parentOf(x)), RED);
-                    rotateLeft(parentOf(parentOf(x)));
+                    setColor(p, BLACK);
+                    setColor(g, RED);
+                    rotateLeft(g);
                 }
             }
         }
@@ -119,6 +121,7 @@ public class RBTree<K extends Comparable<K>, V> extends BSTree<K, V> implements 
     /**
      * 删除节点之后的调整，平衡二叉树（AVL-Tree）或者红黑树（RB-Tree）
      */
+    @SuppressWarnings("DanglingJavadoc")
     @Override
     public void fixAfterDeletion(Node<K, V> x, boolean delete) {
 
