@@ -1,5 +1,6 @@
 package com.lee.leewanandroid.ui.main
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.widget.TextView
@@ -64,6 +65,9 @@ class MainActivity : BaseActivity() {
     private fun initNavigationView() {
         val mUsTv = nav_view.getHeaderView(0).findViewById<TextView>(R.id.nav_header_login)
         mUsTv.text = getString(R.string.login)
+        mUsTv.setOnClickListener {
+            startActivity(Intent(this, DemoFlipperActivity::class.java))
+        }
     }
 
     private fun showFragment(index: Int) {
