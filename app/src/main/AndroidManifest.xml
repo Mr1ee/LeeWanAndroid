@@ -48,7 +48,6 @@
         <activity
             android:name=".ui.article.ArticleDetailActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".ui.main.DemoFlipperActivity" />
     </application>
 
 </manifest>
