@@ -66,7 +66,7 @@ class MainActivity : BaseActivity() {
         val mUsTv = nav_view.getHeaderView(0).findViewById<TextView>(R.id.nav_header_login)
         mUsTv.text = getString(R.string.login)
         mUsTv.setOnClickListener {
-            startActivity(Intent(this, DemoFlipperActivity::class.java))
+            startActivity(Intent(this, AnimationActivity::class.java))
         }
     }
 

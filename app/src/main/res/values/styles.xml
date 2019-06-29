@@ -43,4 +43,9 @@
         <item name="textAllCaps">true</item>
     </style>
 
+    <style name="ButtonNormalStyle" parent="Base.TextAppearance.AppCompat.Button">
+        <item name="android:layout_margin">15dp</item>
+        <item name="android:textColor">@color/bg_btn_selector_text_color</item>
+        <item name="android:background">@drawable/btn_button_selector_normal</item>
+    </style>
 </resources>
