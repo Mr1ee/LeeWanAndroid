@@ -1,24 +1,21 @@
 package com.lee.leewanandroid.widget
 
+import android.content.Context
 import android.widget.Toast
 import com.lee.leewanandroid.WanAndroidApp
 
 object ToastUtils {
 
-    private val instance: Toast by lazy(mode = LazyThreadSafetyMode.SYNCHRONIZED) {
-        Toast(WanAndroidApp.mContext).apply {
-            duration = Toast.LENGTH_SHORT
-        }
+    private val instance: Context by lazy(mode = LazyThreadSafetyMode.SYNCHRONIZED) {
+        WanAndroidApp.mContext
     }
 
     fun showToast(text: String?, duration: Int = Toast.LENGTH_SHORT) {
-        instance.setText(text)
-        instance.duration = duration
-        instance.show()
+        Toast.makeText(instance, text, duration).show()
     }
 
     fun showToast(resId: Int, duration: Int = Toast.LENGTH_SHORT) {
-        showToast(WanAndroidApp.mContext.resources.getString(resId), duration)
+        showToast(instance.resources.getString(resId), duration)
     }
 
 }

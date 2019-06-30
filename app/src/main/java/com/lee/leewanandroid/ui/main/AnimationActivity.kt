@@ -1,9 +1,12 @@
 package com.lee.leewanandroid.ui.main
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.animation.*
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.lee.leewanandroid.R
+import com.lee.leewanandroid.widget.ToastUtils
 import kotlinx.android.synthetic.main.activity_animation.*
 
 class AnimationActivity : AppCompatActivity() {
@@ -17,6 +20,7 @@ class AnimationActivity : AppCompatActivity() {
         initView()
     }
 
+    @SuppressLint("SetTextI18n")
     private fun initView() {
         btn_translate.setOnClickListener {
             val animation = if (fromXml) {
@@ -59,7 +63,6 @@ class AnimationActivity : AppCompatActivity() {
             }
 
             iv_animation_like.startAnimation(animation)
-
         }
         btn_alpha.setOnClickListener {
             val animation = if (fromXml) {
@@ -77,6 +80,19 @@ class AnimationActivity : AppCompatActivity() {
 
         btn_load_from_xml.setOnClickListener {
             fromXml = !fromXml
+            btn_load_from_xml.text = "现在演示的动画是" + if (fromXml) {
+                "XML加载"
+            } else {
+                "代码生成"
+            }
+        }
+
+        iv_animation_like.setOnClickListener {
+            ToastUtils.showToast("点击了心型View！！！")
+        }
+
+        cl_parent_container.setOnClickListener {
+            ToastUtils.showToast("点击了父布局！！！")
         }
     }
 }

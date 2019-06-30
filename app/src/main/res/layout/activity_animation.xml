@@ -2,6 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cl_parent_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -19,6 +20,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:foreground="?attr/selectableItemBackground"
+            android:stateListAnimator="@animator/press_up_selector_animator"
             android:text="平移"
             tools:ignore="HardcodedText,UnusedAttribute" />
 
@@ -29,6 +31,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:foreground="?attr/selectableItemBackground"
+            android:stateListAnimator="@animator/press_up_selector_animator"
             android:text="旋转"
             tools:ignore="HardcodedText,UnusedAttribute" />
 
@@ -39,6 +42,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:foreground="?attr/selectableItemBackground"
+            android:stateListAnimator="@animator/press_up_selector_animator"
             android:text="缩放"
             tools:ignore="HardcodedText,UnusedAttribute" />
 
@@ -49,6 +53,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:foreground="?attr/selectableItemBackground"
+            android:stateListAnimator="@animator/press_up_selector_animator"
             android:text="透明度"
             tools:ignore="HardcodedText,UnusedAttribute" />
     </LinearLayout>
@@ -61,6 +66,7 @@
         android:layout_weight="1"
         android:foreground="?attr/selectableItemBackground"
         android:padding="5dp"
+        android:stateListAnimator="@animator/press_up_selector_animator"
         android:text="XML/代码生成"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toBottomOf="@id/ll_btn_container"
